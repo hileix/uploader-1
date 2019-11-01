@@ -4,7 +4,8 @@
   "description": "Web client file upload",
   "main": "lib/index.js",
   "scripts": {
-    "start": "webpack-dev-server --port 3001"
+    "start": "webpack-dev-server --port 3001",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
@@ -12,9 +13,10 @@
   },
   "keywords": [
     "webuploader",
-    "web",
-    "file",
-    "upload"
+    "fileupload"
+  ],
+  "files": [
+    "lib/**"
   ],
   "author": "",
   "license": "MIT",

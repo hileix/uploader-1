@@ -6,13 +6,14 @@ export interface configure {
   requestAdapter: (requestAdapterParams: RequestAdapterParams) => void;
 }
 
+/**
+ * upload base class
+ */
 export default class Uploader {
   static configure = ({ requestAdapter }: configure) => {
     if (typeof requestAdapter !== 'function') {
       throwError('requestAdapter is a function.');
     }
-
-
     Uploader.requestAdapter = requestAdapter;
   }
   static requestAdapter: (requestAdapterParams: RequestAdapterParams) => void;
@@ -38,7 +39,6 @@ export default class Uploader {
     this.options = { url, method, autoUpload, threads, accept, ...restOption };
   }
 
-  public input: HTMLInputElement | null;
   public options: UploadOptions;
   public allFiles: Array<File> = []; // 所有的文件
   public waitingUploadFiles: Array<File> = []; // 等待上传的文件

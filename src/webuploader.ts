@@ -1,12 +1,10 @@
 import Uploader, { UploadOptions } from './Uploader';
 import { throwError } from './utils';
 
-export interface WebuploaderOptions extends UploadOptions {
-  dom: HTMLInputElement; // input dom
-  multiple?: boolean; // 是否可以选择多个文件
-}
-
-class Webuploader extends Uploader {
+/**
+ * web clinet upload class
+ */
+export default class Webuploader extends Uploader {
   public dom: HTMLInputElement;
   public options: WebuploaderOptions;
   constructor({ dom, multiple = false, accept = ['*/*'], ...restOptions }: WebuploaderOptions) {
@@ -48,4 +46,7 @@ class Webuploader extends Uploader {
   };
 }
 
-export default Webuploader;
+export interface WebuploaderOptions extends UploadOptions {
+  dom: HTMLInputElement; // input dom
+  multiple?: boolean; // 是否可以选择多个文件
+}
