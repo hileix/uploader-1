@@ -16,13 +16,13 @@ const uploader = new Webuploader({
   chunkSize: 5242880, // 分片大小
   threads: 3,
   autoUpload: false,
-  startUpload: () => {
+  onStart: () => {
     console.log('startUpload:', startUploadIndex++)
   },
-  successUpload: () => {
+  onSuccess: () => {
     console.log('successUpload:', successUploadIndex++)
   },
-  uploadComplete: () => {
+  onComplete: () => {
     console.log('所有文件都上传完了~');
   }
 });
@@ -36,4 +36,3 @@ const uploader = new Webuploader({
 
 // 取消上传
 // webuploader.cancel()
-

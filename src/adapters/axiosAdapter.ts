@@ -2,7 +2,7 @@
 import axios from 'axios';
 import { RequestAdapterParams } from '../uploader';
 
-const axiosAdapter = ({ url, method, file, successUpload, errorUpload, afterUpload }: RequestAdapterParams) => {
+const axiosAdapter = ({ url, method, file, onSuccess, onError, onAfter }: RequestAdapterParams) => {
   const formData = new FormData();
   formData.append('test.mp3', file);
 
@@ -14,14 +14,14 @@ const axiosAdapter = ({ url, method, file, successUpload, errorUpload, afterUplo
     }
   }).then(res => {
     // 上传成功
-    successUpload && successUpload(res);
-    afterUpload && afterUpload();
+    onSuccess && onSuccess(res);
+    onAfter && onAfter();
 
   }).catch(err => {
     // 上传失败
     console.error('[upload error]:', err);
-    errorUpload && errorUpload(err);
-    afterUpload && afterUpload();
+    onError && onError(err);
+    onAfter && onAfter();
   });
 
 }
