@@ -5,8 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "start": "webpack-dev-server --port 3001",
-    "build": "tsc",
-    "publish": "npm run publish --access public"
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
