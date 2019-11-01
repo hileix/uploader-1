@@ -1,11 +1,15 @@
-import Webuploader from '../src';
+import { axiosAdapter, Webuploader } from '../src';
+
+Webuploader.configure({ requestAdapter: axiosAdapter });
+
 
 let startUploadIndex = 1;
 let successUploadIndex = 1;
 
-const webuploader = new Webuploader('#my-input', {
+const uploader = new Webuploader({
+  dom: document.querySelector('#my-input') as HTMLInputElement,
   url: 'http://localhost:7001/uploadFile', // 上传文件的地址
-  method: 'POST', // 文件上传方式
+  method: 'post', // 文件上传方式
   multiple: true, // 是否可以选择多个文件
   accept: ['image/*', 'audio/*'], // 接受的文件类型
   chunked: false, // 开启分片上传
@@ -24,7 +28,7 @@ const webuploader = new Webuploader('#my-input', {
 });
 
 (document.querySelector('button') as any).addEventListener('click', function () {
-  webuploader.start()
+  uploader.start()
 }, false)
 
 // 开始上传
