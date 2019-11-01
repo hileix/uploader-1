@@ -1,5 +1,5 @@
 {
-  "name": "webuploader",
+  "name": "@hife/uploader",
   "version": "0.1.0",
   "description": "Web client file upload",
   "main": "lib/index.js",
