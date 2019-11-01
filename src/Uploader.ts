@@ -104,7 +104,6 @@ export default class Uploader {
       url,
       file: file,
       method: method as methodType,
-      fileName: getFileName(i),
       beforeUpload: this.handleBeforeUpload,
       startUpload: this.handleStartUpload,
       successUpload: this.handleSuccessUpload,
@@ -120,7 +119,6 @@ function uploadRequest({
   url,
   file,
   method,
-  fileName,
   beforeUpload,
   startUpload,
   successUpload,
@@ -158,10 +156,6 @@ export interface UploadParams {
    * 上传方式
    */
   method: methodType,
-  /**
-   * 文件名称
-   */
-  fileName: string;
   /**
    * 上传之前的回调
    */

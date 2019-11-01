@@ -1,6 +1,6 @@
-import Uploader from './Uploader';
+import Uploader from './uploader';
 
 export { default as axiosAdapter } from './adapters/axiosAdapter';
-export { default as Webuploader } from './Webuploader';
+export { default as Webuploader } from './webuploader';
 
 export default Uploader

@@ -1,6 +1,6 @@
 
 import axios from 'axios';
-import { RequestAdapterParams } from '../Uploader';
+import { RequestAdapterParams } from '../uploader';
 
 const axiosAdapter = ({ url, method, file, successUpload, errorUpload, afterUpload }: RequestAdapterParams) => {
   const formData = new FormData();

@@ -1,4 +1,4 @@
-import Uploader, { UploadOptions } from './Uploader';
+import Uploader, { UploadOptions } from './uploader';
 import { throwError } from './utils';
 
 /**

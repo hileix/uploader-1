@@ -5,7 +5,9 @@
   "main": "lib/index.js",
   "scripts": {
     "start": "webpack-dev-server --port 3001",
-    "build": "tsc"
+    "build": "tsc",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "repository": {
     "type": "git",
@@ -26,12 +28,15 @@
   "homepage": "https://github.com/hifeteam/webuploader#readme",
   "devDependencies": {
     "@koa/cors": "^3.0.0",
+    "@types/jest": "^24.0.21",
     "css-loader": "^3.2.0",
     "html-webpack-plugin": "^3.2.0",
+    "jest": "^24.9.0",
     "koa": "^2.11.0",
     "koa-body": "^4.1.1",
     "koa-router": "^7.4.0",
     "style-loader": "^1.0.0",
+    "ts-jest": "^24.1.0",
     "ts-loader": "^6.2.1",
     "typescript": "^3.6.4",
     "webpack": "^4.41.2",
