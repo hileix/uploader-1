@@ -7,7 +7,15 @@ import { throwError } from './utils';
 export default class Webuploader extends Uploader {
   public dom: HTMLInputElement;
   public options: WebuploaderOptions;
-  constructor({ dom, multiple = false, accept = ['*/*'], threads = 1, ...restOptions }: WebuploaderOptions) {
+  constructor({
+    dom,
+    method = 'post',
+    multiple = false,
+    accept = ['*/*'],
+    threads = 1,
+    autoUpload = true,
+    ...restOptions
+  }: WebuploaderOptions) {
     super(restOptions);
 
     if (!dom) {
@@ -41,7 +49,7 @@ export default class Webuploader extends Uploader {
     this.waitingUploadFiles = this.waitingUploadFiles.concat(files);
 
     if (this.options.autoUpload) {
-      this.loopStart(this.options.threads as number)
+      this.loopStart(this.options.threads as number);
     }
   };
 }
