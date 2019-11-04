@@ -24,7 +24,7 @@ const uploader = new Webuploader({
   },
   onComplete: () => {
     console.log('所有文件都上传完了~');
-  }
+  },
 });
 
 (document.querySelector('button') as any).addEventListener('click', function () {

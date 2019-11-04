@@ -2,9 +2,11 @@
 import axios from 'axios';
 import { RequestAdapterParams } from '../uploader';
 
-const axiosAdapter = ({ url, method, file, onSuccess, onError, onAfter }: RequestAdapterParams) => {
+const axiosAdapter = ({ url, method, file, onStart, onSuccess, onError, onAfter }: RequestAdapterParams) => {
+  onStart();
+
   const formData = new FormData();
-  formData.append('test.mp3', file);
+  formData.append(file.name, file);
 
   axios({
     url, method,

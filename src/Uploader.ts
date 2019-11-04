@@ -1,9 +1,5 @@
 import { throwError } from './utils';
 
-export interface configure {
-  requestAdapter: (requestAdapterParams: RequestAdapterParams) => void;
-}
-
 /**
  * upload base class
  */
@@ -43,6 +39,7 @@ export default class Uploader {
   public uploadingFiles: Array<File> = []; // 正在上传的文件
   public uploadedFiles: Array<File> = []; // 上传成功的文件
   public errorUploadFiles: Array<File> = []; // 上传失败的文件
+  public status: Status; // 状态
 
   public loopStart = (count: number) => {
     for (let i = 0; i < count; i++) {
@@ -94,7 +91,7 @@ export default class Uploader {
 
   // start upload
   public start() {
-    const { url, method } = this.options;
+    const { url, method, requestAdapter } = this.options;
     const file = this.waitingUploadFiles[0];
     if (!file) {
       return console.warn('[webuploader]: There are no files waiting to be uploaded!');
@@ -109,7 +106,7 @@ export default class Uploader {
       onSuccess: this.handleSuccessUpload,
       onError: this.handleErrorUpload,
       onAfter: this.handleAfterUpload,
-      requestAdapter: Uploader.requestAdapter
+      requestAdapter: requestAdapter || Uploader.requestAdapter
     });
   }
 }
@@ -126,13 +123,7 @@ function uploadRequest({
   onAfter,
   requestAdapter
 }: UploadParams) {
-  // 上传前
-  onBefore && onBefore();
-
-  requestAdapter({ url, file, method, onSuccess, onError, onAfter });
-
-  // 开始上传
-  onStart && onStart();
+  requestAdapter({ url, file, method, onBefore, onStart, onSuccess, onError, onAfter });
 }
 
 export interface UploadParams {
@@ -151,11 +142,11 @@ export interface UploadParams {
   /**
    * 上传之前的回调
    */
-  onBefore?: () => void;
+  onBefore: () => void;
   /**
    * 开始上传的回调
    */
-  onStart?: () => void;
+  onStart: () => void;
   /**
    * 上传成功的回调
    */
@@ -199,7 +190,9 @@ export interface UploadOptions {
 export interface RequestAdapterParams {
   url: string;
   method: methodType;
-  file: File,
+  file: File;
+  onBefore: () => void;
+  onStart: () => void;
   onSuccess?: (res: any) => void;
   onError?: (err: Error) => void;
   onAfter?: () => void;
@@ -209,3 +202,16 @@ export interface filesSourceAdapterParams {
   dom: HTMLInputElement,
   receiveFiles: (files: Array<File>) => void;
 }
+
+export interface configure {
+  requestAdapter: (requestAdapterParams: RequestAdapterParams) => void;
+}
+
+export type OnBefore = (file: File) => void;
+
+export type OnStart = (file: File) => void;
+
+export type OnSuccess = (file: File) => void;
+
+export type Status = 'uploading' | 'inactive';
+

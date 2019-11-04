@@ -37,7 +37,8 @@ const config = {
   },
   devServer: {
     contentBase: './dist',
-    open: 'Google Chrome'
+    open: 'Google Chrome',
+    disableHostCheck: true
   },
   plugins: [
     new HtmlWebpackPlugin({
