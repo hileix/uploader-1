@@ -33,7 +33,7 @@ export default class Webuploader extends Uploader {
 
     this.dom = dom;
     this.addEventListener();
-    this.options = { dom, threads, ...restOptions };
+    this.options = { dom, threads, autoUpload, ...restOptions };
   }
 
   public addEventListener() {
