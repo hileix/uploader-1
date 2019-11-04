@@ -9,21 +9,21 @@ export default class Uploader {
       throwError('requestAdapter is a function.');
     }
     Uploader.requestAdapter = requestAdapter;
-  }
+  };
   static requestAdapter: (requestAdapterParams: RequestAdapterParams) => void;
 
-  constructor(
-    {
-      url = '',
-      method = 'post',
-      autoUpload = true,
-      threads = 1,
-      accept,
-      ...restOption
-    }: UploadOptions
-  ) {
+  constructor({
+    url = '',
+    method = 'post',
+    autoUpload = true,
+    threads = 1,
+    accept,
+    ...restOption
+  }: UploadOptions) {
     if (typeof Uploader.requestAdapter !== 'function') {
-      throwError('Please configure Upload requestAdapter using upload.configure() method.')
+      throwError(
+        'Please configure Upload requestAdapter using upload.configure() method.'
+      );
     }
     if (!url) {
       throwError('url is required.');
@@ -45,22 +45,22 @@ export default class Uploader {
     for (let i = 0; i < count; i++) {
       this.start();
     }
-  }
+  };
 
-  public handleBeforeUpload = () => {
+  public handleBeforeUpload = (file: File) => {
     const { onBefore } = this.options;
-    onBefore && onBefore();
-  }
+    onBefore && onBefore(file);
+  };
 
-  public handleStartUpload = () => {
+  public handleStartUpload = (file: File) => {
     this.uploadingFiles.push(this.waitingUploadFiles.shift() as File);
     const { onStart } = this.options;
-    onStart && onStart();
-  }
+    onStart && onStart(file);
+  };
 
-  public handleSuccessUpload = () => {
+  public handleSuccessUpload = (file: File) => {
     const { onSuccess } = this.options;
-    onSuccess && onSuccess();
+    onSuccess && onSuccess(file);
 
     this.uploadedFiles.push(this.uploadingFiles.shift() as File);
 
@@ -74,27 +74,29 @@ export default class Uploader {
       const { onComplete } = this.options;
       onComplete && onComplete();
     }
-  }
+  };
 
-  public handleErrorUpload = () => {
+  public handleErrorUpload = (error: Error) => {
     const file = this.uploadingFiles.shift();
     this.errorUploadFiles.push(file as File);
 
     const { onError } = this.options;
-    onError && onError();
-  }
+    onError && onError(error);
+  };
 
-  public handleAfterUpload = () => {
+  public handleAfterUpload = (file: File) => {
     const { onAfter } = this.options;
-    onAfter && onAfter();
-  }
+    onAfter && onAfter(file);
+  };
 
   // start upload
   public start() {
     const { url, method, requestAdapter } = this.options;
     const file = this.waitingUploadFiles[0];
     if (!file) {
-      return console.warn('[webuploader]: There are no files waiting to be uploaded!');
+      return console.warn(
+        '[webuploader]: There are no files waiting to be uploaded!'
+      );
     }
 
     uploadRequest({
@@ -123,7 +125,16 @@ function uploadRequest({
   onAfter,
   requestAdapter
 }: UploadParams) {
-  requestAdapter({ url, file, method, onBefore, onStart, onSuccess, onError, onAfter });
+  requestAdapter({
+    url,
+    file,
+    method,
+    onBefore,
+    onStart,
+    onSuccess,
+    onError,
+    onAfter
+  });
 }
 
 export interface UploadParams {
@@ -138,15 +149,15 @@ export interface UploadParams {
   /**
    * 上传方式
    */
-  method: methodType,
+  method: methodType;
   /**
    * 上传之前的回调
    */
-  onBefore: () => void;
+  onBefore: (file: File) => void;
   /**
    * 开始上传的回调
    */
-  onStart: () => void;
+  onStart: (file: File) => void;
   /**
    * 上传成功的回调
    */
@@ -158,13 +169,12 @@ export interface UploadParams {
   /**
    * 上传后的回调（成功或失败都会执行）
    */
-  onAfter?: () => void;
+  onAfter?: (file: File) => void;
   /**
    * 请求适配器
    */
   requestAdapter: (requestAdapterParams: RequestAdapterParams) => void;
 }
-
 
 export type methodType = 'post' | 'get';
 
@@ -176,30 +186,29 @@ export interface UploadOptions {
   chunkSize?: number; // 分片大小
   autoUpload?: boolean; // 是否选择文件后就自动开始上传，默认 true
   threads?: number; // 上传并发数
-  onBefore?: () => void; // 上传前的回调
-  onStart?: () => void; // 开始上传的回调
-  onSuccess?: () => void; // 上传成功的回调
-  onError?: () => void; // 上传失败的回调
-  onAfter?: () => void; // 上传后的回调（成功或者失败）
+  onBefore?: (file: File) => void; // 上传前的回调
+  onStart?: (file: File) => void; // 开始上传的回调
+  onSuccess?: (file: File) => void; // 上传成功的回调
+  onError?: (error: Error) => void; // 上传失败的回调
+  onAfter?: (file: File) => void; // 上传后的回调（成功或者失败）
   onComplete?: () => void; // 所有文件上传完成的回调
   onProgress?: (file: File, percentage: number) => void; // 上传进度的回调
   requestAdapter?: (UploadParams: UploadParams) => void; // 请求适配器
 }
 
-
 export interface RequestAdapterParams {
   url: string;
   method: methodType;
   file: File;
-  onBefore: () => void;
-  onStart: () => void;
+  onBefore: (file: File) => void;
+  onStart: (file: File) => void;
   onSuccess?: (res: any) => void;
   onError?: (err: Error) => void;
-  onAfter?: () => void;
+  onAfter?: (file: File) => void;
 }
 
 export interface filesSourceAdapterParams {
-  dom: HTMLInputElement,
+  dom: HTMLInputElement;
   receiveFiles: (files: Array<File>) => void;
 }
 
@@ -214,4 +223,3 @@ export type OnStart = (file: File) => void;
 export type OnSuccess = (file: File) => void;
 
 export type Status = 'uploading' | 'inactive';
-
