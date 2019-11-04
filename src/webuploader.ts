@@ -7,7 +7,7 @@ import { throwError } from './utils';
 export default class Webuploader extends Uploader {
   public dom: HTMLInputElement;
   public options: WebuploaderOptions;
-  constructor({ dom, multiple = false, accept = ['*/*'], ...restOptions }: WebuploaderOptions) {
+  constructor({ dom, multiple = false, accept = ['*/*'], threads = 1, ...restOptions }: WebuploaderOptions) {
     super(restOptions);
 
     if (!dom) {
@@ -25,7 +25,7 @@ export default class Webuploader extends Uploader {
 
     this.dom = dom;
     this.addEventListener();
-    this.options = { dom, ...restOptions };
+    this.options = { dom, threads, ...restOptions };
   }
 
   public addEventListener() {

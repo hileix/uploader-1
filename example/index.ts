@@ -1,6 +1,6 @@
-import { axiosAdapter, Webuploader } from '../src';
+import {  Webuploader } from '../src';
 
-Webuploader.configure({ requestAdapter: axiosAdapter });
+Webuploader.configure({ requestAdapter: () => console.log('12121') });
 
 
 let startUploadIndex = 1;
