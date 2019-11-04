@@ -18,9 +18,13 @@ export default class Uploader {
     autoUpload = true,
     threads = 1,
     accept,
+    requestAdapter,
     ...restOption
   }: UploadOptions) {
-    if (typeof Uploader.requestAdapter !== 'function') {
+    if (
+      typeof requestAdapter !== 'function' &&
+      typeof Uploader.requestAdapter !== 'function'
+    ) {
       throwError(
         'Please configure Upload requestAdapter using upload.configure() method.'
       );
