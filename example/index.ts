@@ -1,6 +1,5 @@
 import { Webuploader } from '../src';
 
-
 let startUploadIndex = 1;
 let successUploadIndex = 1;
 
@@ -24,6 +23,7 @@ const onBefore = (file: File) => {
   });
 };
 
+// @ts-ignore
 const uploader = new Webuploader({
   dom: document.querySelector('#my-input') as HTMLInputElement,
   url: 'http://localhost:7001/uploadFile', // 上传文件的地址
@@ -33,7 +33,7 @@ const uploader = new Webuploader({
   chunked: false, // 开启分片上传
   chunkSize: 5242880, // 分片大小
   threads: 3,
-  autoUpload: false,
+  autoUpload: true,
   onBefore,
   onStart: () => {
     console.log('startUpload:', startUploadIndex++);
@@ -52,19 +52,28 @@ const uploader = new Webuploader({
     onErrorWrapper,
     onAfterWrapper
   }) => {
+    console.log('request adapther');
     const onBefore = onBeforeWrapper(file);
-    if (onBefore) {
+    const result = onBefore && await onBefore(file);
+    if (result) {
+      // @ts-ignore
       const result = await onBefore(file);
       console.log({ result });
+      const onStart = onStartWrapper(file);
+      onStart && onStart(file);
+
+      const { onSuccess } = onSuccessWrapper(file);
+      // @ts-ignore
+      onSuccess && onSuccess({ data: 111 });
+    } else {
+      console.error('超过了 45 s');
     }
   }
 });
 
 (document.querySelector('button') as any).addEventListener(
   'click',
-  function() {
-    uploader.start();
-  },
+  function() {},
   false
 );
 

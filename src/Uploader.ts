@@ -165,11 +165,16 @@ export interface UploadParams {
   /**
    * 开始上传的回调
    */
-  onStartWrapper: (file: File) => void;
+  onStartWrapper: (file: File) => OnStart | undefined;
   /**
    * 上传成功的回调
    */
-  onSuccessWrapper?: (res: any) => void;
+  onSuccessWrapper: (
+    res: any
+  ) => {
+    onSuccess?: OnSuccess | undefined;
+    onComplete?: OnComplete | undefined;
+  };
   /**
    * 上传失败的回调
    */
@@ -237,5 +242,8 @@ export type OnErrorWrapper = CommonCallbackWrapper;
 export type OnAfterWrapper = CommonCallbackWrapper;
 
 export type OnBefore = (file: File) => any;
+export type OnStart = (file: File) => any;
+export type OnSuccess = (res: any) => any;
+export type OnComplete = (file: File) => any;
 
 export type Status = 'uploading' | 'inactive';
