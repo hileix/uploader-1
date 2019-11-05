@@ -77,6 +77,7 @@ export default class Uploader {
     if (!this.waitingUploadFiles.length && !this.uploadingFiles.length) {
       const { onComplete } = this.options;
       callbacks.onComplete = onComplete;
+      callbacks.onSuccess = onSuccess;
     } else {
       callbacks.onSuccess = onSuccess;
     }
