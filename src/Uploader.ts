@@ -53,18 +53,17 @@ export default class Uploader {
 
   public handleBeforeUpload = (file: File) => {
     const { onBefore } = this.options;
-    onBefore && onBefore(file);
+    return onBefore;
   };
 
   public handleStartUpload = (file: File) => {
     this.uploadingFiles.push(this.waitingUploadFiles.shift() as File);
     const { onStart } = this.options;
-    onStart && onStart(file);
+    return onStart;
   };
 
   public handleSuccessUpload = (file: File) => {
     const { onSuccess } = this.options;
-    onSuccess && onSuccess(file);
 
     this.uploadedFiles.push(this.uploadingFiles.shift() as File);
 
@@ -76,7 +75,9 @@ export default class Uploader {
     // 所有文件都上传完了
     if (!this.waitingUploadFiles.length && !this.uploadingFiles.length) {
       const { onComplete } = this.options;
-      onComplete && onComplete();
+      return onComplete;
+    } else {
+      return onSuccess;
     }
   };
 
@@ -85,12 +86,12 @@ export default class Uploader {
     this.errorUploadFiles.push(file as File);
 
     const { onError } = this.options;
-    onError && onError(error);
+    return onError;
   };
 
   public handleAfterUpload = (file: File) => {
     const { onAfter } = this.options;
-    onAfter && onAfter(file);
+    return onAfter;
   };
 
   // start upload
@@ -107,11 +108,11 @@ export default class Uploader {
       url,
       file: file,
       method: method as methodType,
-      onBefore: this.handleBeforeUpload,
-      onStart: this.handleStartUpload,
-      onSuccess: this.handleSuccessUpload,
-      onError: this.handleErrorUpload,
-      onAfter: this.handleAfterUpload,
+      onBeforeWrapper: this.handleBeforeUpload,
+      onStartWrapper: this.handleStartUpload,
+      onSuccessWrapper: this.handleSuccessUpload,
+      onErrorWrapper: this.handleErrorUpload,
+      onAfterWrapper: this.handleAfterUpload,
       requestAdapter: requestAdapter || Uploader.requestAdapter
     });
   }
@@ -122,22 +123,22 @@ function uploadRequest({
   url,
   file,
   method,
-  onBefore,
-  onStart,
-  onSuccess,
-  onError,
-  onAfter,
+  onBeforeWrapper,
+  onStartWrapper,
+  onSuccessWrapper,
+  onErrorWrapper,
+  onAfterWrapper,
   requestAdapter
 }: UploadParams) {
   requestAdapter({
     url,
     file,
     method,
-    onBefore,
-    onStart,
-    onSuccess,
-    onError,
-    onAfter
+    onBeforeWrapper,
+    onStartWrapper,
+    onSuccessWrapper,
+    onErrorWrapper,
+    onAfterWrapper
   });
 }
 
@@ -157,23 +158,23 @@ export interface UploadParams {
   /**
    * 上传之前的回调
    */
-  onBefore: (file: File) => void;
+  onBeforeWrapper: (file: File) => OnBefore | undefined;
   /**
    * 开始上传的回调
    */
-  onStart: (file: File) => void;
+  onStartWrapper: (file: File) => void;
   /**
    * 上传成功的回调
    */
-  onSuccess?: (res: any) => void;
+  onSuccessWrapper?: (res: any) => void;
   /**
    * 上传失败的回调
    */
-  onError?: (err: Error) => void;
+  onErrorWrapper?: (err: Error) => void;
   /**
    * 上传后的回调（成功或失败都会执行）
    */
-  onAfter?: (file: File) => void;
+  onAfterWrapper?: (file: File) => void;
   /**
    * 请求适配器
    */
@@ -204,11 +205,11 @@ export interface RequestAdapterParams {
   url: string;
   method: methodType;
   file: File;
-  onBefore: (file: File) => void;
-  onStart: (file: File) => void;
-  onSuccess?: (res: any) => void;
-  onError?: (err: Error) => void;
-  onAfter?: (file: File) => void;
+  onBeforeWrapper: (file: File) => void;
+  onStartWrapper: (file: File) => void;
+  onSuccessWrapper?: (res: any) => void;
+  onErrorWrapper?: (err: Error) => void;
+  onAfterWrapper?: (file: File) => void;
 }
 
 export interface filesSourceAdapterParams {
@@ -220,10 +221,18 @@ export interface configure {
   requestAdapter: (requestAdapterParams: RequestAdapterParams) => void;
 }
 
-export type OnBefore = (file: File) => void;
+export type CommonCallbackWrapper = <T>(file: File) => T | undefined;
 
-export type OnStart = (file: File) => void;
+export type OnBeforeWrapper = CommonCallbackWrapper;
 
-export type OnSuccess = (file: File) => void;
+export type OnStartWrapper = CommonCallbackWrapper;
+
+export type OnSuccessWrapper = CommonCallbackWrapper;
+
+export type OnErrorWrapper = CommonCallbackWrapper;
+
+export type OnAfterWrapper = CommonCallbackWrapper;
+
+export type OnBefore = (file: File) => any;
 
 export type Status = 'uploading' | 'inactive';
