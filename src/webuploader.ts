@@ -49,7 +49,7 @@ export default class Webuploader extends Uploader {
     this.waitingUploadFiles = this.waitingUploadFiles.concat(files);
 
     if (this.options.autoUpload) {
-      this.loopStart(this.options.threads as number);
+      this.loopStart(Math.min(this.options.threads as number, files.length));
     }
   };
 }
