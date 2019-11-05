@@ -72,13 +72,15 @@ export default class Uploader {
       this.start();
     }
 
+    let callbacks: any = {};
     // 所有文件都上传完了
     if (!this.waitingUploadFiles.length && !this.uploadingFiles.length) {
       const { onComplete } = this.options;
-      return onComplete;
+      callbacks.onComplete = onComplete;
     } else {
-      return onSuccess;
+      callbacks.onSuccess = onSuccess;
     }
+    return callbacks;
   };
 
   public handleErrorUpload = (error: Error) => {
