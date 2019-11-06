@@ -1,8 +1,8 @@
 {
   "name": "@hife/uploader",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "Web client file upload",
-  "main": "lib/index.js",
+  "main": "lib/src/index.js",
   "scripts": {
     "start": "webpack-dev-server --port 3001",
     "build": "tsc",
