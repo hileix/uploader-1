@@ -16,7 +16,8 @@ export default class Webuploader extends Uploader {
     autoUpload = true,
     ...restOptions
   }: WebuploaderOptions) {
-    super(restOptions);
+    super({ method, accept, threads, autoUpload, ...restOptions });
+    this.options = { dom, method, accept, threads, autoUpload, ...restOptions };
 
     if (!dom) {
       throwError('dom is invalid.');
@@ -30,10 +31,8 @@ export default class Webuploader extends Uploader {
     if (Array.isArray(accept) && accept.length) {
       dom.setAttribute('accept', `${accept.join(',')}`);
     }
-
     this.dom = dom;
     this.addEventListener();
-    this.options = { dom, threads, autoUpload, ...restOptions };
   }
 
   public addEventListener() {
