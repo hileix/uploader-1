@@ -17,12 +17,10 @@ export default class Uploader {
     method = 'post',
     autoUpload = true,
     threads = 1,
-    accept,
-    requestAdapter,
     ...restOption
   }: UploadOptions) {
     // 存储 options
-    this.options = { url, method, autoUpload, threads, accept, ...restOption };
+    this.options = { url, method, autoUpload, threads, ...restOption };
     this.validateOptions(this.options);
   }
 
