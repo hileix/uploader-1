@@ -1,6 +1,6 @@
 {
   "name": "@hife/uploader",
-  "version": "0.4.4",
+  "version": "0.5.0",
   "description": "Web client file upload",
   "main": "lib/src/index.js",
   "scripts": {
