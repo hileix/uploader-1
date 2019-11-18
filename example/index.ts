@@ -1,10 +1,10 @@
-import { Webuploader, axiosAdapterFactory } from '../src';
+import { Webuploader, axiosAdapter } from '../src';
 
 let startUploadIndex = 1;
 let successUploadIndex = 1;
 
 Webuploader.configure({
-  requestAdapter: axiosAdapterFactory({ method: 'get' })
+  requestAdapter: axiosAdapter
 });
 
 // @ts-ignore
@@ -14,35 +14,23 @@ const uploader = new Webuploader({
   method: 'post', // 文件上传方式
   multiple: true, // 是否可以选择多个文件
   accept: ['audio/*'], // 接受的文件类型
-  chunked: false, // 开启分片上传
-  chunkSize: 5242880, // 分片大小
   threads: 3,
   autoUpload: true,
   onBefore: (file: File, callback) => {
-    const src = window.URL.createObjectURL(file);
-    const audio = new Audio();
-    audio.src = src;
-
-    // 声音长度不能长于 45s
-    audio.addEventListener(
-      'loadedmetadata',
-      function() {
-        const duration = audio.duration;
-        if (typeof duration === 'number' && duration > 45) {
-          callback('声音长度长于 45s，请重新选择！');
-          console.error('声音长度长于 45s，请重新选择！');
-        } else {
-          callback();
-        }
-      },
-      false
-    );
+    const size = file.size / 1024 / 1024;
+    // 小于 2M 的文件才能上传
+    if (size < 2) {
+      callback();
+    } else {
+      console.error('文件大小必须小于 2M！');
+      callback('文件大小必须小于 2M！');
+    }
   },
-  onStart: () => {
-    console.log('startUpload:', startUploadIndex++);
+  onStart: file => {
+    console.log(`开始上传第 ${startUploadIndex} 个文件`, file.name);
   },
   onSuccess: () => {
-    console.log('successUpload:', successUploadIndex++);
+    console.log(`第 ${successUploadIndex}: 个文件上传成功！`);
   },
   onComplete: () => {
     console.log('所有文件都上传完了~');

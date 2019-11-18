@@ -193,8 +193,8 @@ export interface UploadOptions {
   url: string; // 上传文件的地址
   method?: MethodType; // 文件上传方式
   accept?: Array<string>; // 接受的文件类型
-  chunked?: boolean; // 开启分片上传
-  chunkSize?: number; // 分片大小
+  // chunked?: boolean; // 开启分片上传
+  // chunkSize?: number; // 分片大小
   autoUpload?: boolean; // 是否选择文件后就自动开始上传，默认 true
   threads?: number; // 上传并发数
   /**
@@ -221,10 +221,6 @@ export interface UploadOptions {
    * 所有文件上传完成的回调
    */
   onComplete?: (uploadedFiles: Array<File>) => void;
-  /**
-   * 上传进度变化的回调
-   */
-  onProgress?: (file: File, percentage: number) => void; // 上传进度的回调
   /**
    * 请求适配器
    */

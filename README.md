@@ -5,36 +5,98 @@
 yarn add @hife/uploader
 ```
 
-## 使用
+## 例子
 
-### web 端文件上传
 ```typescript
-import { Webuploader, axiosAdapter } from '@hife/uploader';
-// 配置 requestAdapter，这里使用官方的 axiosAdapter
-Webuploader.configure({ requestAdapter: axiosAdapter });
+import { Webuploader, axiosAdapter } from '../src';
 
 let startUploadIndex = 1;
 let successUploadIndex = 1;
+
+Webuploader.configure({
+  requestAdapter: axiosAdapter
+});
+
+// @ts-ignore
 const uploader = new Webuploader({
   dom: document.querySelector('#my-input') as HTMLInputElement,
   url: 'http://localhost:7001/uploadFile', // 上传文件的地址
   method: 'post', // 文件上传方式
   multiple: true, // 是否可以选择多个文件
-  accept: ['image/*', 'audio/*'], // 接受的文件类型
-  chunked: false, // 开启分片上传
-  chunkSize: 5242880, // 分片大小
+  accept: ['audio/*'], // 接受的文件类型
   threads: 3,
-  autoUpload: false,
-  startUpload: () => {
-    console.log('startUpload:', startUploadIndex++)
+  autoUpload: true,
+  onBefore: (file: File, callback) => {
+    const size = file.size / 1024 / 1024;
+    // 小于 2M 的文件才能上传
+    if (size < 2) {
+      callback();
+    } else {
+      console.error('文件大小必须小于 2M！');
+      callback('文件大小必须小于 2M！');
+    }
   },
-  successUpload: () => {
-    console.log('successUpload:', successUploadIndex++)
+  onStart: file => {
+    console.log(`开始上传第 ${startUploadIndex} 个文件`, file.name);
   },
-  uploadComplete: () => {
+  onSuccess: () => {
+    console.log(`第 ${successUploadIndex}: 个文件上传成功！`);
+  },
+  onComplete: () => {
     console.log('所有文件都上传完了~');
   }
 });
+
+```
+
+## API
+
+### Uploader
+```typescript
+export interface UploadOptions {
+  url: string; // 上传文件的地址
+  method?: MethodType; // 文件上传方式
+  accept?: Array<string>; // 接受的文件类型
+  autoUpload?: boolean; // 是否选择文件后就自动开始上传，默认 true
+  threads?: number; // 上传并发数
+  /**
+   * 上传前的回调，此回调用来验证是否可以进行上传
+   */
+  onBefore?: (file: File, callback: (errorMessage?: string) => void) => void;
+  /**
+   * 开始上传的回调
+   */
+  onStart?: (file: File) => void;
+  /**
+   * 上传成功的回调
+   */
+  onSuccess?: (file: File) => void;
+  /**
+   * 上传失败的回调
+   */
+  onError?: (error: Error) => void; // 上传失败的回调
+  /**
+   * 上传后的回调（成功或者失败）
+   */
+  onAfter?: (file: File) => void;
+  /**
+   * 所有文件上传完成的回调
+   */
+  onComplete?: (uploadedFiles: Array<File>) => void;
+  /**
+   * 请求适配器
+   */
+  requestAdapter?: RequestAdapterType;
+}
+```
+
+### Webuploader
+
+```typescript
+export interface WebuploaderOptions extends UploadOptions {
+  dom: HTMLInputElement; // input dom
+  multiple?: boolean; // 是否可以选择多个文件
+}
 ```
 
 ### Node.js 端文件上传
@@ -50,15 +112,3 @@ node server/
 # 开启前端开发环境
 npm start
 ```
-
-
-## Todo list
-### web 端
-- [x] 单文件上传
-- [x] 多文件上传
-- [ ] 分片上传
-
-### Node.js 端
-- [ ] 单文件上传
-- [ ] 多文件上传
-- [ ] 分片上传
