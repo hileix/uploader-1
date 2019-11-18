@@ -7,6 +7,8 @@ yarn add @hife/uploader
 
 ## 例子
 
+### Webuploader 使用
+
 ```typescript
 import { Webuploader, axiosAdapter } from '../src';
 
@@ -46,6 +48,74 @@ const uploader = new Webuploader({
     console.log('所有文件都上传完了~');
   }
 });
+
+```
+
+
+### requestAdapter 例子
+
+```typescript
+export interface RequestAdapterParams {
+  url: string;
+  method: MethodType;
+  file: File;
+  handleStart: (file: File) => void;
+  handleSuccess: (res: unknown) => void;
+  handleError: (err: Error) => void;
+  handleAfter: (file: File) => void;
+}
+
+// 请求适配器 类型
+export type RequestAdapterType = (
+  requestAdapterParams: RequestAdapterParams
+) => void;
+
+const axiosAdapter: RequestAdapterType = ({
+    url,
+    method,
+    file,
+    handleStart,
+    handleSuccess,
+    handleError,
+    handleAfter
+  }) => {
+    /**
+     * 开始上传文件
+     * 内部处理的状态变化：等待上传的文件 -> 正在上传的文件
+     */
+    handleStart(file);
+
+    const formData = new FormData();
+    formData.append(file.name, file);
+
+    axios({
+      url,
+      method,
+      data: formData,
+      headers: {
+        'content-type': 'multipart/form-data'
+      }
+    })
+      .then(res => {
+        /**
+         * 上传一个文件成功
+         * 内部处理的状态变化：正在上传的文件 -> 上传成功的文件
+         */
+        handleSuccess(res);
+        // 上传文件完成（成功或失败）
+        handleAfter(file);
+      })
+      .catch(err => {
+        /**
+         * 上传一个文件失败
+         * 内部处理的状态变化：正在上传的文件 -> 上传出错的文件
+         */
+        handleError(err);
+        // 上传文件完成（成功或失败）
+        handleAfter(file);
+      });
+  };
+
 
 ```
 
