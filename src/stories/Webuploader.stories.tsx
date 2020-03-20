@@ -135,7 +135,6 @@ function FileUpload() {
       uploader.removeEventListener();
     }
 
-    console.log('aaa:', values);
     const newUploader = getWebuploaderInstance('#file-upload-input-1', {
       ...values,
       onChange,
@@ -247,6 +246,7 @@ function ChunkUpload() {
   }, []);
 
   const handleConfigChange = (values: any) => {
+    console.log({ values });
     if (uploader) {
       uploader.removeEventListener();
     }
@@ -257,7 +257,6 @@ function ChunkUpload() {
     const newUploader = getWebuploaderInstance('#file-upload-input-2', {
       ...values,
       onChange: (filesInfo: any) => {
-        console.log('aaa filesInfo');
         setAllFiles(filesInfo);
       },
       onBefore: (fileInfo: FileInfo, callback: any) => {

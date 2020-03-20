@@ -12,15 +12,17 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "module": "esnext",
+    "module": "commonjs",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
+    "isolatedModules": false,
+    "noEmit": false,
     "jsx": "react",
-    "strictPropertyInitialization": false
+    "strictPropertyInitialization": false,
+    "outDir": "./lib",
+    "declaration": true
   },
   "include": [
-    "src"
+    "src/*"
   ]
 }
