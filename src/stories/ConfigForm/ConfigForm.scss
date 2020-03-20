@@ -1,0 +1,23 @@
+.config-form {
+  width: 320px;
+  border: 1px solid #f0f0f0;
+  padding: 16px !important;
+  position: relative;
+  &__footer {
+    text-align: center;
+  }
+  &__submit-button {
+    width: 260px;
+  }
+  &__copy-button {
+    z-index: 1;
+    cursor: pointer;
+    position: absolute;
+    right: 16px;
+    top: 16px;
+  }
+}
+
+.ant-form-item {
+  margin-bottom: 12px !important;
+}

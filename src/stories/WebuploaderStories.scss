@@ -1,0 +1,32 @@
+@import "~antd/dist/antd.css";
+
+.webuploader-stories {
+  &__wrapper {
+    padding: 36px;
+    width: 100%;
+    display: flex;
+  }
+  &__left {
+    flex: 1;
+  }
+  &__right {
+    flex: 2;
+  }
+  &__inner-wrapper {
+    width: 100%;
+  }
+  &__tips-wrapper {
+    text-align: left;
+    font-size: 12px;
+    p {
+      margin: 4px 0;
+    }
+    margin-bottom: 32px;
+  }
+  &__total-progress {
+    text-align: left;
+  }
+  &__file-progress {
+    text-align: left;
+  }
+}

@@ -1,0 +1,17 @@
+.upload-view {
+  &__inner-wrapper {
+    padding: 8px;
+  }
+  &__progress-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  &__remove-button-wrapper {
+    width: 40px;
+    text-align: right;
+  }
+  &__remove-button {
+    cursor: pointer;
+  }
+}
