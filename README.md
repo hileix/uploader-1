@@ -7,7 +7,9 @@ yarn add @hife/uploader
 
 ## 例子
 
-### Webuploader 使用
+### uploader 使用
+
+#### 文件上传
 
 ```typescript
 import { Webuploader, axiosAdapter } from '../src';

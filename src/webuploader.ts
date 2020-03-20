@@ -6,6 +6,7 @@ import {
   validateOptions
 } from './utils';
 import { FileInfo, ExtendUploaderOptions, FilterFunction } from './interface';
+import axiosAdapter from './adapters/axiosAdapter';
 
 const getFilesInfo = (
   files: Array<File>,
@@ -189,7 +190,6 @@ export default class Webuploader extends Uploader {
         }
         return sum + 1;
       }, 0);
-      console.log('sum: ', sum);
       return Math.min(this.options.threads as number, sum);
     }
   }
@@ -244,6 +244,10 @@ export default class Webuploader extends Uploader {
     this.dom.value = '';
   };
 }
+
+Webuploader.configure({
+  requestAdapter: axiosAdapter
+});
 
 export interface WebuploaderOptions extends ExtendUploaderOptions {
   dom: HTMLInputElement; // input dom

@@ -514,7 +514,12 @@ export default class Uploader {
       onChange && onChange(getSimpleFilesInfo(this.allFiles), fileInfo);
       this.errorUploadFiles.push(fileInfo);
 
-      this.loadedSize += info.loaded;
+      if (info.loaded) {
+        this.loadedSize += info.loaded;
+      } else {
+        this.loadedSize += info.file.size;
+      }
+
       fileInfo.progress = 100;
 
       onError && onError(error);
@@ -577,6 +582,7 @@ export default class Uploader {
     }
 
     const { onProgress } = this.options;
+
     const progress = (this.loadedSize / this.totalSize) * 100;
 
     onProgress && onProgress(progress, getSimpleFilesInfo(this.allFiles));

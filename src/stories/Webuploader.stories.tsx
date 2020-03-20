@@ -1,20 +1,14 @@
 import React, { useEffect } from 'react';
 import { storiesOf } from '@storybook/react';
-import { Webuploader, axiosAdapter } from '../index';
+import { Webuploader } from '../index';
 import { log } from '../utils';
 import { FileInfo, ChunkInfo, SimpleFileInfo } from '../interface';
-import { Progress, Button, message } from 'antd';
-import UploadButton from './UploadButton';
 import './WebuploaderStories.scss';
 import { getFileMD5 } from '../utils';
 import ConfigForm from './ConfigForm';
 import UploadView from './UploadView';
 
 const { useState } = React;
-
-Webuploader.configure({
-  requestAdapter: axiosAdapter
-});
 
 let url = 'http://localhost:7001/uploadFile',
   uploadChunkUrl = 'http://localhost:7001/uploadChunk';
@@ -202,7 +196,6 @@ function ChunkUpload() {
     const uploader = getWebuploaderInstance('#file-upload-input-2', {
       ...defaultConfig,
       onChange: (filesInfo: any) => {
-        console.log({ filesInfo });
         setAllFiles(filesInfo);
       },
       onBefore: (fileInfo: FileInfo, callback: any) => {

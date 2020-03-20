@@ -64,8 +64,6 @@ const axiosAdapterFactory = (options?: object): RequestAdapterType => {
         onAfter(info);
       })
       .catch(err => {
-        console.log('ccc');
-
         // 上传失败
         onError(err, info);
         onAfter(info);
