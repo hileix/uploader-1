@@ -12,47 +12,47 @@ export type UploadStatus =
 
 export interface FileInfo {
   [key: string]: any;
-  id: string;
-  type: 'file';
-  file: File;
-  chunks?: Array<ChunkInfo>;
-  index: number;
-  md5?: string;
+  id: string; // 文件 id
+  type: 'file'; // 类型，'file' 表示属于文件
+  file: File; // 文件
+  chunks?: Array<ChunkInfo>; // 文件的分片
+  index: number; // 索引
+  md5?: string; // 文件 md5 值
   retryCount: number; // 剩余重试次数
   progress: number; // 上传进度
-  status: UploadStatus;
-  cancel?: Canceler;
-  loaded: number;
+  status: UploadStatus; // 上传状态
+  cancel?: Canceler; // 取消 ajax 请求的函数
+  loaded: number; // 已上传的数据量，单位：B
 }
 
 export interface ChunkInfo {
   [key: string]: any;
-  id: string;
-  type: 'chunk';
-  belongFile: FileInfo;
-  chunk: Blob;
-  md5?: string;
-  index: number;
+  id: string; // 分片 id
+  type: 'chunk'; // 类型，'chunk' 表示属于分片
+  belongFile: FileInfo; // 分片所属文件的信息
+  chunk: Blob; // 分片
+  md5?: string; // 分片的 md5 值
+  index: number; // 索引
   retryCount: number; // 剩余重试次数
-  status: UploadStatus;
-  cancel?: Canceler;
-  loaded: number;
+  status: UploadStatus; // 上传状态
+  cancel?: Canceler; // 取消 ajax 请求的函数
+  loaded: number; // 已上传的数据量，单位：B
 }
 
 export type Info = FileInfo | ChunkInfo;
 
 export interface SimpleFileInfo extends Omit<FileInfo, 'file' | 'chunks'> {
   chunks?: SimpleChunkInfo[];
-  name: string;
-  size: number;
+  name: string; // 文件名称
+  size: number; // 文件大小
 }
 
 export interface SimpleChunkInfo
   extends Omit<ChunkInfo, 'chunk' | 'belongFile'> {
-  belongFileId: string;
-  belongFileName: string;
-  belongFileSize: number;
-  size: number;
+  belongFileId: string; // 分片所属的文件 id
+  belongFileName: string; // 分片所属的文件名称
+  belongFileSize: number; // 分片所属的文件大小，单位：B
+  size: number; // 分片尺寸
 }
 
 export type SimpleInfo = SimpleFileInfo | SimpleChunkInfo;
