@@ -1,11 +1,11 @@
-# Web 端和 Node.js 端文件上传
+# Web 端文件上传
 
-## 安装
+## Install
 ```shell
 yarn add @hife/uploader
 ```
 
-## 例子
+## Example
 
 ```shell
 # 1. 首先 clone 本仓库
@@ -312,3 +312,14 @@ uploader.toSuccessful: (id: string) => void;
  */
 uploader.remove: (id: string) => boolean;
 ```
+
+## Todolist
+
+- [ ] 部署 storybook 到 github page，且能够正常查看例子
+- [ ] 测试覆盖率达到 100%
+- [ ] uploader.start()：开始上传
+- [ ] uploader.pause()：暂停上传
+
+## License
+
+[MIT](./LICENSE)
