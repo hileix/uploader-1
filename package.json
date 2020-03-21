@@ -14,7 +14,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "server": "node server/",
-    "release": "npm run test && rm -rf ./lib && tsc --build && hi-pkg-scripts release"
+    "release": "rm -rf ./lib && tsc --build && hi-pkg-scripts release"
   },
   "eslintConfig": {
     "extends": "react-app"
