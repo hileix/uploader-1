@@ -62,42 +62,94 @@ export interface FilterFunction {
 }
 
 export interface UploadOptions {
-  multiple?: boolean; // 是否可以选择多个文件
-  url: string; // 上传文件的地址
-  uploadChunkUrl?: string; // 上传分片的地址（若不指定，则使用 url 作为分片上传的地址）
-  method?: MethodType; // 文件上传方式
+  /**
+   * 是否可以选择多个文件
+   * 默认值：false
+   */
+  multiple?: boolean;
+  /**
+   * 上传文件的地址
+   */
+  url: string;
+  /**
+   * 上传分片的地址（若不指定，则使用 url 作为分片上传的地址）
+   */
+  uploadChunkUrl?: string;
+  /**
+   * 文件上传方式
+   * 默认值：'post'
+   */
+  method?: MethodType;
   /**
    * 接受的文件类型
+   * 默认值：'*\/*'
    * 值参照：https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#attr-accept
    */
   accept?: string;
-  maxSize?: number; // 文件的最大大小，单位：B
-  maxCount?: number; // 文件的最大数量
-  chunked?: boolean; // 开启分片上传
-  chunkSize?: number; // 分片大小
-  chunkThreshold?: number; // 开启分片上传的阈值（文件大小小于该值的时候，不进行分片上传；没有提供值时且开启分片上传时，则所有文件都进行分片上传）
-  autoUpload?: boolean; // 是否选择文件后就自动开始上传，默认 true
-  threads?: number; // 上传并发数
-  retryCount?: number; // 上传文件出错时自动重试的次数，默认两次
-  chunkRetryCount?: number; // 上传分片出错时自动重试次数的次数，默认两次
   /**
-   * 文件筛选
+   * 文件的最大大小，单位：B
+   */
+  maxSize?: number;
+  /**
+   * 文件的最大数量
+   */
+  maxCount?: number;
+  /**
+   * 是否开启分片上传
+   * 默认值：false
+   */
+  chunked?: boolean;
+  /**
+   * 分片大小，单位：MB
+   * 默认值：1
+   */
+  chunkSize?: number;
+  /**
+   * 开启分片上传的阈值，单位：MB（文件大小小于该值的时候，不进行分片上传；没有提供值时且开启分片上传时，则所有文件都进行分片上传）
+   * 默认值：0
+   */
+  chunkThreshold?: number;
+  /**
+   * 是否选择文件后就自动开始上传
+   * 默认值：true
+   */
+  autoUpload?: boolean;
+  /**
+   * 上传并发数
+   * 默认值：1
+   */
+  threads?: number;
+  /**
+   * 上传文件出错时自动重试的次数
+   * 默认值：2
+   */
+  retryCount?: number;
+  /**
+   * 上传分片出错时自动重试次数的次数
+   * 默认值：2
+   */
+  chunkRetryCount?: number;
+  /**
+   * 文件筛选函数，返回值为通过筛选的文件
    */
   filter?: FilterFunction;
   /**
-   * 文件排序
+   * 文件排序函数，返回值为排好序的文件
    */
   sort?: FilterFunction;
   /**
-   * 1. 文件数量改变时的回调
-   * 2. 文件状态改变时的回调
+   * 文件数量改变、文件状态改变时的回调
+   * allFileInfo：所有上传的文件信息
+   * statusChangedFileInfo：状态发生的文件信息
    */
   onChange?: (
     allFileInfo: SimpleFileInfo[],
     statusChangedFileInfo?: FileInfo
   ) => void;
   /**
-   * 上传前的回调，此回调用来验证是否可以进行上传
+   * 上传前的回调，此回调用来对文件进行 md5 序列化、验证等操作
+   * fileInfo：文件信息
+   * callback：回调函数。当传入 errorMessage 参数，表示有错误，该文件不进行上传；否则进行上传
    */
   onBefore?: (
     fileInfo: FileInfo,
@@ -105,26 +157,35 @@ export interface UploadOptions {
   ) => void;
   /**
    * 开始上传的回调
+   * fileInfo：文件信息
    */
   onStart?: (fileInfo: FileInfo) => void;
   /**
    * 上传成功的回调
+   * fileInfo：文件信息
+   * res：服务端响应的数据
    */
   onSuccess?: (fileInfo: FileInfo, res?: unknown) => void;
   /**
    * 上传失败的回调
+   * error：错误信息
    */
   onError?: (error: Error) => void;
   /**
    * 文件上传失败时重试的回调
+   * fileInfo：文件信息
+   * res：服务端响应的数据
    */
   onRetry?: (fileInfo: FileInfo, res?: unknown) => void;
   /**
    * 上传后的回调（成功或者失败）
+   * fileInfo：上传后的文件信息
    */
   onAfter?: (fileInfo: FileInfo) => void;
   /**
    * 上传分片前的回调，此回调用来验证是否可以进行上传
+   * chunkInfo：分片信息
+   * callback：回调函数。当传入 errorMessage 参数，表示有错误，该文件不进行上传；否则进行上传
    */
   onChunkBefore?: (
     chunkInfo: ChunkInfo,
@@ -132,29 +193,38 @@ export interface UploadOptions {
   ) => void;
   /**
    * 开始上传分片的回调
+   * chunkInfo：分片信息
    */
   onChunkStart?: (chunkInfo: ChunkInfo) => void;
   /**
    * 上传分片成功的回调
+   * chunkInfo：分片信息
+   * res：服务端响应的数据
    */
   onChunkSuccess?: (chunkInfo: ChunkInfo, res: unknown) => void;
   /**
    * 上传分片失败的回调
+   * error：错误信息
    */
   onChunkError?: (error: Error) => void;
   /**
    * 分片上传失败时重试的回调
+   * chunkInfo：分片信息
+   * res：服务端响应的数据
    */
   onChunkRetry?: (chunkInfo: ChunkInfo, res?: unknown) => void;
   /**
    * 上传分片后的回调（成功或者失败）
+   * chunkInfo：分片信息
    */
   onChunkAfter?: (chunkInfo: ChunkInfo) => void;
   /**
    * 一个文件的所有分片都上传完成的回调
+   * uploadedFileInfo：文件信息
+   * callback：回调。当传入 errorMessage 参数，表示有错误，该文件上传失败；否则表示上传成功
    */
   onChunkComplete?: (
-    uploadedFile: FileInfo,
+    uploadedFileInfo: FileInfo,
     callback: (callbackParams: {
       // errorMessage 存在时，说明出错了
       errorMessage?: string;
@@ -164,10 +234,13 @@ export interface UploadOptions {
   ) => void;
   /**
    * 所有文件上传完成的回调
+   * uploadedFiles：已上传成功的文件信息
    */
   onComplete?: (uploadedFiles: Array<FileInfo>) => void;
   /**
    * 上传进度改变的回调
+   * totalProgress：总进度
+   * filesInfo：所有的文件信息
    */
   onProgress?: (totalProgress: number, filesInfo: SimpleFileInfo[]) => void;
   /**
