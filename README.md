@@ -36,6 +36,10 @@ import { Canceler } from 'axios';
 
 export interface UploadOptions {
   /**
+   * input dom
+   */
+  dom: HTMLInputElement;
+  /**
    * 是否可以选择多个文件
    * 默认值：false
    */
