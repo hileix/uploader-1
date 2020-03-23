@@ -15,6 +15,9 @@
     "server": "node server/",
     "release": "rm -rf ./lib && tsc --build && hi-pkg-scripts release"
   },
+  "files": [
+    "lib/**"
+  ],
   "eslintConfig": {
     "extends": "react-app"
   },
