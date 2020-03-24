@@ -1,3 +1,6 @@
+## Release v1.0.4
+- docs:update changelog.md
+
 ## Release v1.0.3
 - fix:修复 uploadChunkUrl ts 定义错误的 bug
 

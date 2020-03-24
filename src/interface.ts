@@ -143,7 +143,7 @@ export interface UploadOptions {
    * statusChangedFileInfo：状态发生的文件信息
    */
   onChange?: (
-    allFileInfo: SimpleFileInfo[],
+    allFileInfo: FileInfo[],
     statusChangedFileInfo?: FileInfo
   ) => void;
   /**
@@ -242,7 +242,7 @@ export interface UploadOptions {
    * totalProgress：总进度
    * filesInfo：所有的文件信息
    */
-  onProgress?: (totalProgress: number, filesInfo: SimpleFileInfo[]) => void;
+  onProgress?: (totalProgress: number, filesInfo: FileInfo[]) => void;
   /**
    * 请求适配器
    */

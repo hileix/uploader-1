@@ -120,7 +120,7 @@ export interface UploadOptions {
    * statusChangedFileInfo：状态发生的文件信息
    */
   onChange?: (
-    allFileInfo: SimpleFileInfo[],
+    allFileInfo: FileInfo[],
     statusChangedFileInfo?: FileInfo
   ) => void;
   /**
@@ -219,7 +219,7 @@ export interface UploadOptions {
    * totalProgress：总进度
    * filesInfo：所有的文件信息
    */
-  onProgress?: (totalProgress: number, filesInfo: SimpleFileInfo[]) => void;
+  onProgress?: (totalProgress: number, filesInfo: FileInfo[]) => void;
   /**
    * 请求适配器
    */
@@ -266,20 +266,6 @@ export interface ChunkInfo {
 }
 
 export type Info = FileInfo | ChunkInfo;
-
-export interface SimpleFileInfo extends Omit<FileInfo, 'file' | 'chunks'> {
-  chunks?: SimpleChunkInfo[];
-  name: string; // 文件名称
-  size: number; // 文件大小
-}
-
-export interface SimpleChunkInfo
-  extends Omit<ChunkInfo, 'chunk' | 'belongFile'> {
-  belongFileId: string; // 分片所属的文件 id
-  belongFileName: string; // 分片所属的文件名称
-  belongFileSize: number; // 分片所属的文件大小，单位：B
-  size: number; // 分片尺寸
-}
 
 export interface FilterFunction {
   (files: File[]): File[];

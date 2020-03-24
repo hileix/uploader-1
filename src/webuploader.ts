@@ -2,7 +2,6 @@ import Uploader from './uploader';
 import {
   throwError,
   getId,
-  getSimpleFilesInfo,
   validateOptions
 } from './utils';
 import { FileInfo, ExtendUploaderOptions, FilterFunction } from './interface';
@@ -233,7 +232,7 @@ export default class Webuploader extends Uploader {
     this.allFiles = this.allFiles.concat(filesInfo);
     this.waitingUploadFiles = this.waitingUploadFiles.concat(filesInfo);
 
-    onChange && onChange(getSimpleFilesInfo(this.allFiles));
+    onChange && onChange(this.allFiles);
 
     if (this.options.autoUpload) {
       const count = this.getLoopStartCount(this.waitingUploadFiles);

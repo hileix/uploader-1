@@ -1,14 +1,14 @@
 import React from 'react';
 import './UploadView.scss';
-import { Form, Input, Button, Radio, InputNumber, Progress } from 'antd';
+import { Button, Progress } from 'antd';
 import UploadButton from '../UploadButton';
-import { SimpleFileInfo } from '../../interface';
 import { DeleteOutlined } from '@ant-design/icons';
+import { FileInfo } from '../../interface';
 
 function UploadView(props: {
   inputId: string;
   uploader: any;
-  allFiles: SimpleFileInfo[];
+  allFiles: FileInfo[];
   totalPercent: number;
 }) {
   const { uploader, allFiles, totalPercent, inputId } = props;
@@ -51,7 +51,7 @@ function UploadView(props: {
                 key={fileInfo.id}
                 className='webuploader-stories__file-progress'
               >
-                <div>{fileInfo.name}:</div>
+                <div>{fileInfo.file.name}:</div>
                 <div className='upload-view__progress-wrapper'>
                   <Progress
                     percent={_percent}

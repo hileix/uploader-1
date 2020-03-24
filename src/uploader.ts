@@ -1,9 +1,7 @@
 import {
   throwError,
   getInfoInFilesInfoById,
-  getSimpleFilesInfo,
-  removeInfoFromFilesInfoById,
-  getSimpleChunksInfo
+  removeInfoFromFilesInfoById
 } from './utils';
 import {
   FileInfo,
@@ -90,40 +88,18 @@ export default class Uploader {
    */
   public getStats() {
     return {
-      allFiles: getSimpleFilesInfo(this.allFiles),
-      waitingUploadFiles: getSimpleFilesInfo(this.waitingUploadFiles),
-      uploadingFiles: getSimpleFilesInfo(this.uploadingFiles),
-      uploadedFiles: getSimpleFilesInfo(this.uploadedFiles),
-      errorUploadFiles: getSimpleFilesInfo(this.errorUploadFiles),
-      invalidFiles: getSimpleFilesInfo(this.invalidFiles),
+      allFiles: this.allFiles,
+      waitingUploadFiles: this.waitingUploadFiles,
+      uploadingFiles: this.uploadingFiles,
+      uploadedFiles: this.uploadedFiles,
+      errorUploadFiles: this.errorUploadFiles,
+      invalidFiles: this.invalidFiles,
 
-      allChunks: this.allChunks.length
-        ? getSimpleChunksInfo(this.allChunks, this.allChunks[0].belongFile)
-        : [],
-      waitingUploadChunks: this.waitingUploadChunks.length
-        ? getSimpleChunksInfo(
-            this.waitingUploadChunks,
-            this.waitingUploadChunks[0].belongFile
-          )
-        : [],
-      uploadingChunks: this.uploadingChunks.length
-        ? getSimpleChunksInfo(
-            this.uploadingChunks,
-            this.uploadingChunks[0].belongFile
-          )
-        : [],
-      uploadedChunks: this.uploadedChunks.length
-        ? getSimpleChunksInfo(
-            this.uploadedChunks,
-            this.uploadedChunks[0].belongFile
-          )
-        : [],
-      errorUploadChunks: this.errorUploadChunks.length
-        ? getSimpleChunksInfo(
-            this.errorUploadChunks,
-            this.errorUploadChunks[0].belongFile
-          )
-        : [],
+      allChunks: this.allChunks,
+      waitingUploadChunks: this.waitingUploadChunks,
+      uploadingChunks: this.uploadingChunks,
+      uploadedChunks: this.uploadedChunks,
+      errorUploadChunks: this.errorUploadChunks,
 
       loadedSize: this.loadedSize,
       totalSize: this.totalSize
@@ -230,7 +206,7 @@ export default class Uploader {
     if (isRemove) {
       this.loadedSize -= info.file.size;
       const { onChange } = this.options;
-      onChange && onChange(getSimpleFilesInfo(this.allFiles));
+      onChange && onChange(this.allFiles);
       return true;
     }
     return false;
@@ -263,7 +239,7 @@ export default class Uploader {
         );
       }
       fileInfo.status = 'waiting';
-      onChange && onChange(getSimpleFilesInfo(this.allFiles), fileInfo);
+      onChange && onChange(this.allFiles, fileInfo);
       this.waitingUploadFiles.unshift(fileInfo);
       onRetry && onRetry(fileInfo);
     } else {
@@ -340,7 +316,7 @@ export default class Uploader {
         const { onStart, onChange } = this.options;
         this.uploadingFiles.push(fileInfo);
         fileInfo.status = 'uploading';
-        onChange && onChange(getSimpleFilesInfo(this.allFiles), fileInfo);
+        onChange && onChange(this.allFiles, fileInfo);
 
         onStart && onStart(info as FileInfo);
       }
@@ -399,7 +375,7 @@ export default class Uploader {
         );
       }
       fileInfo.status = 'uploaded';
-      onChange && onChange(getSimpleFilesInfo(this.allFiles), fileInfo);
+      onChange && onChange(this.allFiles, fileInfo);
 
       this.uploadedFiles.push(fileInfo);
 
@@ -511,7 +487,7 @@ export default class Uploader {
       const { onError, onChange } = this.options;
 
       fileInfo.status = 'error';
-      onChange && onChange(getSimpleFilesInfo(this.allFiles), fileInfo);
+      onChange && onChange(this.allFiles, fileInfo);
       this.errorUploadFiles.push(fileInfo);
 
       if (info.loaded) {
@@ -537,8 +513,7 @@ export default class Uploader {
       }
       const { onError, onChange } = this.options;
       chunkInfo.status = 'error';
-      onChange &&
-        onChange(getSimpleFilesInfo(this.allFiles), chunkInfo.belongFile);
+      onChange && onChange(this.allFiles, chunkInfo.belongFile);
       this.errorUploadChunks.push(chunkInfo);
 
       // 文件的一个分片出错，整个文件就上传出错，所以需要删除 uploadingFiles 中的文件信息
@@ -564,7 +539,7 @@ export default class Uploader {
       this.loadedSize += chunkInfo.belongFile.file.size;
       fileInfo.progress = 100;
 
-      onChange && onChange(getSimpleFilesInfo(this.allFiles), fileInfo);
+      onChange && onChange(this.allFiles, fileInfo);
       onError && onError(error);
     }
 
@@ -585,7 +560,7 @@ export default class Uploader {
 
     const progress = (this.loadedSize / this.totalSize) * 100;
 
-    onProgress && onProgress(progress, getSimpleFilesInfo(this.allFiles));
+    onProgress && onProgress(progress, this.allFiles);
   };
 
   /**
@@ -665,7 +640,7 @@ export default class Uploader {
     const { onProgress } = this.options;
     const progress = (this.loadedSize / this.totalSize) * 100;
 
-    onProgress && onProgress(progress, getSimpleFilesInfo(this.allFiles));
+    onProgress && onProgress(progress, this.allFiles);
   };
 
   // 上传
