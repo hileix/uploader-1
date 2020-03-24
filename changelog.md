@@ -1,3 +1,6 @@
+## Release v1.0.6
+- fix:修复调用 remove() 方法时，不会取消上传请求的 bug
+
 ## Release v1.0.5
 - fix:修复 onChange 和 onProgress 回调中参数错误的 bug
 
