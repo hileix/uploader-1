@@ -275,5 +275,5 @@ export interface RequestAdapterParams {
 }
 
 export interface ExtendUploaderOptions extends UploadOptions {
-  uploadChunkUrl: string;
+  uploadChunkUrl?: string;
 }

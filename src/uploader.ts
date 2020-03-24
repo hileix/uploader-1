@@ -764,7 +764,7 @@ export default class Uploader {
       return;
     }
 
-    const { uploadChunkUrl, method, requestAdapter } = this.options;
+    const { url, uploadChunkUrl, method, requestAdapter } = this.options;
 
     const _chunkInfo = this.waitingUploadChunks[0];
 
@@ -789,7 +789,7 @@ export default class Uploader {
     };
 
     uploadRequest(requestAdapter || Uploader.requestAdapter, {
-      url: uploadChunkUrl,
+      url: uploadChunkUrl || url,
       fileInfo: null,
       chunkInfo: _chunkInfo,
       uploadType,
