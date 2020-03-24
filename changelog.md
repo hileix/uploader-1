@@ -1,3 +1,6 @@
+## Release v1.0.5
+- fix:修复 onChange 和 onProgress 回调中参数错误的 bug
+
 ## Release v1.0.4
 - docs:update changelog.md
 

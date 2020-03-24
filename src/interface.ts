@@ -9,7 +9,6 @@ export type UploadStatus =
   | 'uploaded'
   | 'error'
   | 'invalid';
-
 export interface FileInfo {
   [key: string]: any;
   id: string; // 文件 id
@@ -40,22 +39,6 @@ export interface ChunkInfo {
 }
 
 export type Info = FileInfo | ChunkInfo;
-
-export interface SimpleFileInfo extends Omit<FileInfo, 'file' | 'chunks'> {
-  chunks?: SimpleChunkInfo[];
-  name: string; // 文件名称
-  size: number; // 文件大小
-}
-
-export interface SimpleChunkInfo
-  extends Omit<ChunkInfo, 'chunk' | 'belongFile'> {
-  belongFileId: string; // 分片所属的文件 id
-  belongFileName: string; // 分片所属的文件名称
-  belongFileSize: number; // 分片所属的文件大小，单位：B
-  size: number; // 分片尺寸
-}
-
-export type SimpleInfo = SimpleFileInfo | SimpleChunkInfo;
 
 export interface FilterFunction {
   (files: File[]): File[];

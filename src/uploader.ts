@@ -180,14 +180,14 @@ export default class Uploader {
       throw new Error('uploader.remove(id: string): The id must be a string.');
     }
 
-    const info: Info | undefined = getInfoInFilesInfoById(id, this.allFiles);
+    const info = getInfoInFilesInfoById(id, this.allFiles);
 
     // 要移除的文件不存在
-    // id 不是文件 id
-    if (!info || info.type !== 'file') {
+    if (!info) {
       return false;
     }
-
+    // 取消上传
+    info.cancel && info.cancel('@hife/uploader:Cancel the upload');
     let isRemove = false;
     [
       this.allFiles,
@@ -206,7 +206,7 @@ export default class Uploader {
     if (isRemove) {
       this.loadedSize -= info.file.size;
       const { onChange } = this.options;
-      onChange && onChange(this.allFiles);
+      onChange && onChange([...this.allFiles]);
       return true;
     }
     return false;
@@ -239,7 +239,7 @@ export default class Uploader {
         );
       }
       fileInfo.status = 'waiting';
-      onChange && onChange(this.allFiles, fileInfo);
+      onChange && onChange([...this.allFiles], { ...fileInfo });
       this.waitingUploadFiles.unshift(fileInfo);
       onRetry && onRetry(fileInfo);
     } else {
@@ -316,7 +316,7 @@ export default class Uploader {
         const { onStart, onChange } = this.options;
         this.uploadingFiles.push(fileInfo);
         fileInfo.status = 'uploading';
-        onChange && onChange(this.allFiles, fileInfo);
+        onChange && onChange([...this.allFiles], { ...fileInfo });
 
         onStart && onStart(info as FileInfo);
       }
@@ -375,7 +375,7 @@ export default class Uploader {
         );
       }
       fileInfo.status = 'uploaded';
-      onChange && onChange(this.allFiles, fileInfo);
+      onChange && onChange([...this.allFiles], { ...fileInfo });
 
       this.uploadedFiles.push(fileInfo);
 
@@ -487,7 +487,7 @@ export default class Uploader {
       const { onError, onChange } = this.options;
 
       fileInfo.status = 'error';
-      onChange && onChange(this.allFiles, fileInfo);
+      onChange && onChange([...this.allFiles], { ...fileInfo });
       this.errorUploadFiles.push(fileInfo);
 
       if (info.loaded) {
@@ -513,7 +513,7 @@ export default class Uploader {
       }
       const { onError, onChange } = this.options;
       chunkInfo.status = 'error';
-      onChange && onChange(this.allFiles, chunkInfo.belongFile);
+      onChange && onChange([...this.allFiles], { ...chunkInfo.belongFile });
       this.errorUploadChunks.push(chunkInfo);
 
       // 文件的一个分片出错，整个文件就上传出错，所以需要删除 uploadingFiles 中的文件信息
@@ -539,7 +539,7 @@ export default class Uploader {
       this.loadedSize += chunkInfo.belongFile.file.size;
       fileInfo.progress = 100;
 
-      onChange && onChange(this.allFiles, fileInfo);
+      onChange && onChange([...this.allFiles], { ...fileInfo });
       onError && onError(error);
     }
 
@@ -560,7 +560,7 @@ export default class Uploader {
 
     const progress = (this.loadedSize / this.totalSize) * 100;
 
-    onProgress && onProgress(progress, this.allFiles);
+    onProgress && onProgress(progress, [...this.allFiles]);
   };
 
   /**
@@ -640,7 +640,7 @@ export default class Uploader {
     const { onProgress } = this.options;
     const progress = (this.loadedSize / this.totalSize) * 100;
 
-    onProgress && onProgress(progress, this.allFiles);
+    onProgress && onProgress(progress, [...this.allFiles]);
   };
 
   // 上传
@@ -679,9 +679,11 @@ export default class Uploader {
     // 文件未通过筛选
     // 状态：等待上传的文件 -> 未通过筛选的文件
     if (errorMessage) {
-      this.invalidFiles = this.invalidFiles.concat(
-        this.waitingUploadFiles.shift() as FileInfo
-      );
+      const fileInfo = this.waitingUploadFiles.shift();
+      if (fileInfo) {
+        fileInfo.status = 'invalid';
+        this.invalidFiles.push(fileInfo);
+      }
       return;
     }
     const { url, method, requestAdapter } = this.options;

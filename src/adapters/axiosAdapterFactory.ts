@@ -64,9 +64,18 @@ const axiosAdapterFactory = (options?: object): RequestAdapterType => {
         onAfter(info);
       })
       .catch(err => {
-        // 上传失败
-        onError(err, info);
-        onAfter(info);
+        // 取消上传导致报错
+        if (
+          info.cancel &&
+          err.__CANCEL__ &&
+          err.message === '@hife/uploader:Cancel the upload'
+        ) {
+          onAfter(info);
+        } else {
+          // 上传失败
+          onError(err, info);
+          onAfter(info);
+        }
       });
   };
   return axiosAdapter;

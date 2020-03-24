@@ -1,12 +1,5 @@
 import BMF from '@hife/browser-md5-file';
-import {
-  Info,
-  FileInfo,
-  SimpleFileInfo,
-  ChunkInfo,
-  SimpleChunkInfo,
-  UploadOptions
-} from './interface';
+import { Info, FileInfo, ChunkInfo, UploadOptions } from './interface';
 
 let i = 0;
 
@@ -150,11 +143,12 @@ export const getFileMD5 = (file: Blob): Promise<string> => {
  * @param id file id 或 chunk id
  * @param filesInfo 被查找的文件信息数组
  */
-export function getInfoInFilesInfoById(
-  id: string,
-  filesInfo: FileInfo[]
-): Info | undefined {
-  let info: Info | undefined;
+export function getInfoInFilesInfoById<
+  T extends {
+    [key: string]: any;
+  }
+>(id: string, filesInfo: T[]): T | undefined {
+  let info: T | undefined;
   const iLen = filesInfo.length;
   for (let i = 0; i < iLen; i++) {
     const file = filesInfo[i];
@@ -199,69 +193,4 @@ export function removeInfoFromFilesInfoById<T extends { id: string }>(
     return ret[0];
   }
   return;
-}
-
-/**
- * 获取 simple files info
- * @param filesInfo 文件信息
- */
-export function getSimpleFilesInfo(filesInfo: FileInfo[]): SimpleFileInfo[] {
-  let simpleFilesInfo: SimpleFileInfo[] = [];
-  filesInfo.forEach((fileInfo: FileInfo) => {
-    const simpleFileInfo: SimpleFileInfo = {
-      name: fileInfo.file.name,
-      size: fileInfo.file.size
-    };
-
-    // 基本类型赋值
-    for (let key in fileInfo) {
-      if (fileInfo.hasOwnProperty(key)) {
-        const value = fileInfo[key];
-        if (typeof value === 'string' || typeof value === 'number') {
-          simpleFileInfo[key] = value;
-        }
-      }
-    }
-    if (fileInfo.chunks) {
-      const chunksInfo = getSimpleChunksInfo(fileInfo.chunks, fileInfo);
-      simpleFileInfo.chunks = chunksInfo;
-    }
-
-    simpleFilesInfo.push(simpleFileInfo);
-  });
-
-  return simpleFilesInfo;
-}
-
-/**
- * 获取 simple chunk info
- * @param chunksInfo 分片信息
- */
-export function getSimpleChunksInfo(
-  chunksInfo: ChunkInfo[],
-  fileInfo: FileInfo
-): SimpleChunkInfo[] {
-  let simpleChunksInfo: SimpleChunkInfo[] = [];
-
-  chunksInfo.forEach((chunkInfo: ChunkInfo) => {
-    const simpleChunkInfo: SimpleChunkInfo = {
-      belongFileId: chunkInfo.belongFile.id,
-      belongFileName: fileInfo.file.name,
-      belongFileSize: fileInfo.file.size,
-      size: chunkInfo.chunk.size
-    };
-    // 基本类型赋值
-    for (let key in chunkInfo) {
-      if (fileInfo.hasOwnProperty(key)) {
-        const value = chunkInfo[key];
-        if (typeof value === 'string' || typeof value === 'number') {
-          simpleChunkInfo[key] = value;
-        }
-      }
-    }
-
-    simpleChunksInfo.push(simpleChunkInfo);
-  });
-
-  return simpleChunksInfo;
 }

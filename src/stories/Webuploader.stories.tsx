@@ -62,7 +62,6 @@ function FileUpload() {
   let successChunkIndex = 1;
 
   const onChange = (filesInfo: any) => {
-    console.log('onChange', { filesInfo });
     setAllFiles(filesInfo);
   };
   const onBefore = (fileInfo: FileInfo, callback: any) => {
@@ -152,6 +151,8 @@ function FileUpload() {
     setPercent(0);
     setUploader(newUploader);
   };
+
+  console.log({ allFiles111: allFiles });
 
   return (
     <div className='webuploader-stories__wrapper'>
