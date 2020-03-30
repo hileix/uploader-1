@@ -320,7 +320,7 @@ webuploader 使用的是 `axios` 请求库进行文件上传。有时我们需�
 import { Webuploader, axiosAdapterFactory } from '@hife/uploader';
 
 Webuploader.configure({
-  requestAdapter: axiosAdapterFactory()({
+  requestAdapter: axiosAdapterFactory({
     withCredentials: true
   })
 });

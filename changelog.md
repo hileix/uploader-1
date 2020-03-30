@@ -1,3 +1,6 @@
+## Release v1.1.2
+- fix:修复 Request Config headers 不会覆盖的 bug
+
 ## Release v1.1.1
 - fix:修复跨域请求上传时不会带上 cookie 的 bug
 
