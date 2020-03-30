@@ -151,11 +151,17 @@ export default class Webuploader extends Uploader {
     this.dealNewInputDOMs(dom);
   }
 
+  public addInputDOM(dom: HTMLInputElement | HTMLInputElement[]) {
+    if (!dom) {
+      throwError('dom is invalid.');
+      return;
+    }
+    this.dealNewInputDOMs(dom);
+  }
+
   private dealNewInputDOMs(dom: HTMLInputElement | HTMLInputElement[]) {
     // 数据结构统一成数组
     const inputDOMs = this.getNewInputDOMs(dom);
-
-    console.log('deal new input doms')
 
     // 更新 this.inputDOMs
     this.inputDOMs = [...this.inputDOMs, ...inputDOMs];
@@ -186,7 +192,6 @@ export default class Webuploader extends Uploader {
         item.removeAttribute('multiple');
       });
     } else {
-      console.log(1111)
       doms.forEach(item => {
         item.setAttribute('multiple', '');
       });
@@ -233,7 +238,11 @@ export default class Webuploader extends Uploader {
     const firstFileChunks = filesInfo[0].chunks;
     // 第一个文件存在分片，则第一个文件需要进行分片上传
     if (firstFileChunks) {
-      return Math.min(this.options.threads as number, firstFileChunks.length, this.theRemainingThreads);
+      return Math.min(
+        this.options.threads as number,
+        firstFileChunks.length,
+        this.theRemainingThreads
+      );
     } else {
       // 第一个文件不需要进行分片上传
       const sum = filesInfo.reduce((sum, fileInfo) => {
@@ -242,7 +251,11 @@ export default class Webuploader extends Uploader {
         }
         return sum + 1;
       }, 0);
-      return Math.min(this.options.threads as number, sum, this.theRemainingThreads);
+      return Math.min(
+        this.options.threads as number,
+        sum,
+        this.theRemainingThreads
+      );
     }
   }
 

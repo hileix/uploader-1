@@ -38,7 +38,7 @@ export interface UploadOptions {
   /**
    * input dom
    */
-  dom: HTMLInputElement;
+  dom: HTMLInputElement | HTMLInputElement[];
   /**
    * 是否可以选择多个文件
    * 默认值：false
@@ -276,6 +276,11 @@ export interface FilterFunction {
 ### 2. uploader 实例方法
 
 ```typescript
+/**
+ * 添加对 input change 事件的监听（当你想用另外一个 file input 选择文件且不想创建新实例时使用。此时新的 file input 选择的文件也处于原来的文件列表中）
+ */
+uploader.addInputDOM: (HTMLInputElement | HTMLInputElement[]) => void;
+
 /**
  * 获取文件统计信息
  */
