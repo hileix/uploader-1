@@ -1,3 +1,7 @@
+## Release v1.1.0
+- feat:添加 addInputDOM 实例方法
+- feat:UploadOptions dom 属性添加可以传入数组的功能
+
 ## Release v1.0.6
 - fix:修复调用 remove() 方法时，不会取消上传请求的 bug
 
