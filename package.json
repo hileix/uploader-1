@@ -63,5 +63,8 @@
     "release": {
       "generateChangelog": true
     }
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
   }
 }
