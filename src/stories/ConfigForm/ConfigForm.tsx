@@ -68,7 +68,6 @@ function ConfigForm(props: {
 
   return (
     <Form
-      {...layout}
       form={form}
       name='control-hooks'
       initialValues={initialValues}
@@ -76,6 +75,7 @@ function ConfigForm(props: {
       className='config-form'
       onFinish={onFinish}
       onValuesChange={onValuesChange}
+      {...layout}
     >
       <CopyOutlined className='config-form__copy-button' onClick={handleCopy} />
       <Form.Item name='multiple' label='multiple' rules={[{ required: true }]}>

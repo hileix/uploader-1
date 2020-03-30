@@ -69,6 +69,7 @@ export default class Uploader {
   public status: Status; // 状态
   public uploadingCount: number = 0; // 正在上传文件（分片）的数量
 
+  // 剩余的上传线程数量
   get theRemainingThreads() {
     const { threads } = this.options;
     if (threads) {

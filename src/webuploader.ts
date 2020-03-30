@@ -118,7 +118,7 @@ function Filesfilter(
  * web clinet upload class
  */
 export default class Webuploader extends Uploader {
-  private dom: HTMLInputElement;
+  private inputDOMs: HTMLInputElement[] = [];
   public options: WebuploaderOptions;
   constructor({
     dom,
@@ -138,6 +138,7 @@ export default class Webuploader extends Uploader {
       threads,
       autoUpload,
       chunked,
+      multiple,
       ...restOptions
     };
 
@@ -147,27 +148,83 @@ export default class Webuploader extends Uploader {
       throwError('dom is invalid.');
       return;
     }
-
-    if (!multiple) {
-      dom.removeAttribute('multiple');
-    } else {
-      dom.setAttribute('multiple', '');
-    }
-
-    if (accept) {
-      dom.setAttribute('accept', accept);
-    }
-    this.dom = dom;
-    this.addEventListener();
+    this.dealNewInputDOMs(dom);
   }
 
-  private addEventListener() {
-    this.dom.addEventListener('change', this.handleInputChange);
+  private dealNewInputDOMs(dom: HTMLInputElement | HTMLInputElement[]) {
+    // 数据结构统一成数组
+    const inputDOMs = this.getNewInputDOMs(dom);
+
+    console.log('deal new input doms')
+
+    // 更新 this.inputDOMs
+    this.inputDOMs = [...this.inputDOMs, ...inputDOMs];
+
+    // 处理新 inputDOMs 的 attribute
+    this.dealDOMAttribute(inputDOMs);
+
+    // 监听新 inputDOMs 的 change 事件
+    this.addEventListener(inputDOMs);
+  }
+
+  // 统一处理成数组
+  private getNewInputDOMs(dom: HTMLInputElement | HTMLInputElement[]) {
+    let ret: HTMLInputElement[] = [];
+    if (Array.isArray(dom)) {
+      return [...dom];
+    } else {
+      ret = [dom];
+    }
+    return ret;
+  }
+
+  private dealDOMAttribute(doms: HTMLInputElement[]) {
+    const { multiple, accept } = this.options;
+    // multiple
+    if (!multiple) {
+      doms.forEach(item => {
+        item.removeAttribute('multiple');
+      });
+    } else {
+      console.log(1111)
+      doms.forEach(item => {
+        item.setAttribute('multiple', '');
+      });
+    }
+
+    // accept
+    if (accept) {
+      doms.forEach(item => {
+        item.setAttribute('accept', accept);
+      });
+    }
+  }
+
+  /**
+   * 对传入的 dom 进行 chang 事件的监听
+   * @param dom input dom
+   */
+  private addEventListener(dom: HTMLInputElement | HTMLInputElement[]) {
+    if (Array.isArray(dom)) {
+      dom.forEach(item => {
+        item.addEventListener('change', this.handleInputChange);
+      });
+    } else {
+      dom.addEventListener('change', this.handleInputChange);
+    }
   }
 
   public removeEventListener() {
-    this.dom.removeEventListener('change', this.handleInputChange);
+    this.inputDOMs.forEach(item => {
+      item.removeEventListener('change', this.handleInputChange);
+    });
   }
+
+  removeInputDOMsValue = () => {
+    this.inputDOMs.forEach(inputDOM => {
+      inputDOM.value = '';
+    });
+  };
 
   private getLoopStartCount(filesInfo: Array<FileInfo>) {
     if (!filesInfo.length) {
@@ -176,7 +233,7 @@ export default class Webuploader extends Uploader {
     const firstFileChunks = filesInfo[0].chunks;
     // 第一个文件存在分片，则第一个文件需要进行分片上传
     if (firstFileChunks) {
-      return Math.min(this.options.threads as number, firstFileChunks.length);
+      return Math.min(this.options.threads as number, firstFileChunks.length, this.theRemainingThreads);
     } else {
       // 第一个文件不需要进行分片上传
       const sum = filesInfo.reduce((sum, fileInfo) => {
@@ -185,7 +242,7 @@ export default class Webuploader extends Uploader {
         }
         return sum + 1;
       }, 0);
-      return Math.min(this.options.threads as number, sum);
+      return Math.min(this.options.threads as number, sum, this.theRemainingThreads);
     }
   }
 
@@ -232,11 +289,10 @@ export default class Webuploader extends Uploader {
 
     if (this.options.autoUpload) {
       const count = this.getLoopStartCount(this.waitingUploadFiles);
-      console.log({ count });
       this.loopStart(count);
     }
 
-    this.dom.value = '';
+    this.removeInputDOMsValue();
   };
 }
 
@@ -245,6 +301,6 @@ Webuploader.configure({
 });
 
 export interface WebuploaderOptions extends ExtendUploaderOptions {
-  dom: HTMLInputElement; // input dom
+  dom: HTMLInputElement | HTMLInputElement[]; // input dom
   multiple?: boolean; // 是否可以选择多个文件
 }
