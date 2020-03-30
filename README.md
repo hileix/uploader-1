@@ -107,6 +107,16 @@ export interface UploadOptions {
    */
   chunkRetryCount?: number;
   /**
+   * 文件是否需要 md5 序列化
+   * 默认值：false
+   */
+  md5?: boolean;
+  /**
+   * 分片是否需要 md5 序列化
+   * 默认值：false
+   */
+  chunkMD5?: boolean;
+  /**
    * 文件筛选函数，返回值为通过筛选的文件
    */
   filter?: FilterFunction;

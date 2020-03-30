@@ -113,6 +113,16 @@ export interface UploadOptions {
    */
   chunkRetryCount?: number;
   /**
+   * 文件是否需要 md5 序列化
+   * 默认值：false
+   */
+  md5?: boolean;
+  /**
+   * 分片是否需要 md5 序列化
+   * 默认值：false
+   */
+  chunkMD5?: boolean;
+  /**
    * 文件筛选函数，返回值为通过筛选的文件
    */
   filter?: FilterFunction;
@@ -246,7 +256,7 @@ export interface RequestAdapterParams {
   chunkInfo: ChunkInfo | null;
   method: MethodType;
   // 开始上传文件（分片）的回调
-  onStart: (info: Info) => void;
+  onStart: (info: Info) => Promise<boolean>;
   // 上传文件（分片）成功的回调
   onSuccess: (info: Info, res: unknown) => void;
   // 上传文件（分片）失败的回调

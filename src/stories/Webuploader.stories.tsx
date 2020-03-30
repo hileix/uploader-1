@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { storiesOf } from '@storybook/react';
 import { Webuploader } from '../index';
 import { log } from '../utils';
-import { FileInfo, ChunkInfo, SimpleFileInfo } from '../interface';
+import { FileInfo, ChunkInfo } from '../interface';
 import './WebuploaderStories.scss';
 import { getFileMD5 } from '../utils';
 import ConfigForm from './ConfigForm';
@@ -39,7 +39,9 @@ const defaultConfig = {
   chunkSize: 1,
   chunkThreshold: 0,
   retryCount: 2,
-  chunkRetryCount: 2
+  chunkRetryCount: 2,
+  md5: false,
+  chunkMD5: false
 };
 
 function Tips() {
@@ -54,7 +56,7 @@ function Tips() {
 function FileUpload() {
   const [percent, setPercent] = useState(0);
   const [uploader, setUploader] = useState<any>(null);
-  const [allFiles, setAllFiles] = useState<SimpleFileInfo[]>([]);
+  const [allFiles, setAllFiles] = useState<FileInfo[]>([]);
 
   let startFileIndex = 1;
   let startChunkIndex = 1;
@@ -175,7 +177,7 @@ function FileUpload() {
 function ChunkUpload() {
   const [percent, setPercent] = useState(0);
   const [uploader, setUploader] = useState<any>(null);
-  const [allFiles, setAllFiles] = useState<SimpleFileInfo[]>([]);
+  const [allFiles, setAllFiles] = useState<FileInfo[]>([]);
   const defaultConfig = {
     multiple: true,
     autoUpload: true,
@@ -185,7 +187,9 @@ function ChunkUpload() {
     chunkSize: 1,
     chunkThreshold: 0,
     retryCount: 2,
-    chunkRetryCount: 2
+    chunkRetryCount: 2,
+    md5: false,
+    chunkMD5: false
   };
 
   useEffect(() => {
@@ -333,7 +337,7 @@ function ChunkUpload() {
 function ErrorRetry() {
   const [percent, setPercent] = useState(0);
   const [uploader, setUploader] = useState<any>(null);
-  const [allFiles, setAllFiles] = useState<SimpleFileInfo[]>([]);
+  const [allFiles, setAllFiles] = useState<FileInfo[]>([]);
   const defaultConfig = {
     multiple: true,
     autoUpload: true,
@@ -343,7 +347,9 @@ function ErrorRetry() {
     chunkSize: 1,
     chunkThreshold: 0,
     retryCount: 2,
-    chunkRetryCount: 2
+    chunkRetryCount: 2,
+    md5: false,
+    chunkMD5: false
   };
   let startFileIndex = 1;
   let startChunkIndex = 1;
@@ -396,7 +402,7 @@ function ErrorRetry() {
     });
   };
 
-  const onProgress = (progress: number, allFiles: SimpleFileInfo[]) => {
+  const onProgress = (progress: number, allFiles: FileInfo[]) => {
     setPercent(Number(progress.toFixed(2)));
     setAllFiles(allFiles);
   };
@@ -465,7 +471,7 @@ function ErrorRetry() {
 function BreakpointResume() {
   const [percent, setPercent] = useState(0);
   const [uploader, setUploader] = useState<any>(null);
-  const [allFiles, setAllFiles] = useState<SimpleFileInfo[]>([]);
+  const [allFiles, setAllFiles] = useState<FileInfo[]>([]);
 
   const defaultConfig = {
     multiple: true,
@@ -476,7 +482,9 @@ function BreakpointResume() {
     chunkSize: 1,
     chunkThreshold: 0,
     retryCount: 2,
-    chunkRetryCount: 2
+    chunkRetryCount: 2,
+    md5: false,
+    chunkMD5: false
   };
 
   let startFileIndex = 1;

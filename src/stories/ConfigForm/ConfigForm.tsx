@@ -29,9 +29,10 @@ function ConfigForm(props: {
     chunkThreshold?: number;
     retryCount?: number;
     chunkRetryCount?: number;
+    md5?: boolean;
+    chunkMD5?: boolean;
   };
 }) {
-  const [resetDisabled, setResetDisabled] = useState(true);
   const [applyDisabled, setApplyDisabled] = useState(true);
   const [values, setValues] = useState(props.initialValues);
 
@@ -46,14 +47,12 @@ function ConfigForm(props: {
     const { onChange } = props;
     onChange && onChange(newValues);
     setApplyDisabled(true);
-    setResetDisabled(false);
   };
 
   const handleReset = () => {
     form.resetFields();
     const { onChange } = props;
     onChange && onChange(initialValues);
-    setResetDisabled(true);
   };
 
   const onValuesChange = (changedValues: any, allValues: any) => {
@@ -143,16 +142,18 @@ function ConfigForm(props: {
       >
         <InputNumber min={0} />
       </Form.Item>
-      {/* <div className='config-form__footer'>
-        <Button
-          type='primary'
-          className='config-form__submit-button'
-          onClick={handleReset}
-          disabled={resetDisabled}
-        >
-          Reset
-        </Button>
-      </div> */}
+      <Form.Item name='md5' label='md5' rules={[{ required: true }]}>
+        <Radio.Group>
+          <Radio.Button value={true}>true</Radio.Button>
+          <Radio.Button value={false}>false</Radio.Button>
+        </Radio.Group>
+      </Form.Item>
+      <Form.Item name='chunkMD5' label='chunkMD5' rules={[{ required: true }]}>
+        <Radio.Group>
+          <Radio.Button value={true}>true</Radio.Button>
+          <Radio.Button value={false}>false</Radio.Button>
+        </Radio.Group>
+      </Form.Item>
       <div className='config-form__footer' style={{ marginTop: 4 }}>
         <Button
           type='primary'
@@ -177,7 +178,9 @@ ConfigForm.defaultProps = {
     chunkSize: 1,
     chunkThreshold: 0,
     retryCount: 2,
-    chunkRetryCount: 2
+    chunkRetryCount: 2,
+    md5: false,
+    chunkMD5: false
   }
 };
 

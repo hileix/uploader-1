@@ -1,7 +1,8 @@
 import {
   throwError,
   getInfoInFilesInfoById,
-  removeInfoFromFilesInfoById
+  removeInfoFromFilesInfoById,
+  getFileMD5
 } from './utils';
 import {
   FileInfo,
@@ -691,8 +692,23 @@ export default class Uploader {
 
     const fileInfo: FileInfo = this.waitingUploadFiles[0];
 
-    const onStart = (info: Info): void => {
-      this.handleStartUpload(uploadType, info);
+    const onStart = (info: Info): Promise<boolean> => {
+      return new Promise((resolve, reject) => {
+        if (!this.options.md5 || info.md5) {
+          this.handleStartUpload(uploadType, info);
+          resolve(true);
+        } else {
+          getFileMD5((info as FileInfo).file)
+            .then(md5 => {
+              info.md5 = md5;
+              this.handleStartUpload(uploadType, info);
+              resolve(true);
+            })
+            .catch(err => {
+              console.error(err);
+            });
+        }
+      });
     };
 
     const onSuccess = (info: Info, res: unknown): void => {
@@ -746,8 +762,23 @@ export default class Uploader {
 
     const _chunkInfo = this.waitingUploadChunks[0];
 
-    const onStart = (info: Info): void => {
-      this.handleStartUpload(uploadType, info);
+    const onStart = (info: Info): Promise<boolean> => {
+      return new Promise((resolve, reject) => {
+        if (!this.options.chunkMD5 || info.md5) {
+          this.handleStartUpload(uploadType, info);
+          resolve(true);
+        } else {
+          getFileMD5((info as ChunkInfo).chunk)
+            .then(md5 => {
+              info.md5 = md5;
+              this.handleStartUpload(uploadType, info);
+              resolve(true);
+            })
+            .catch(err => {
+              console.error(err);
+            });
+        }
+      });
     };
 
     const onSuccess = (info: Info, res: unknown): void => {

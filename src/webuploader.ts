@@ -74,6 +74,8 @@ export default class Webuploader extends Uploader {
     threads = 1,
     autoUpload = true,
     chunked = false,
+    md5 = false,
+    chunkMD5 = false,
     ...restOptions
   }: WebuploaderOptions) {
     super({ method, accept, threads, autoUpload, chunked, ...restOptions });
@@ -85,6 +87,8 @@ export default class Webuploader extends Uploader {
       autoUpload,
       chunked,
       multiple,
+      md5,
+      chunkMD5,
       ...restOptions
     };
 
