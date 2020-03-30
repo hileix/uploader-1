@@ -1,3 +1,6 @@
+## Release v1.2.0
+- feat:UploadOptions 添加 md5 和 chunkMD5 属性
+
 ## Release v1.1.2
 - fix:修复 Request Config headers 不会覆盖的 bug
 
