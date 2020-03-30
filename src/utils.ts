@@ -194,3 +194,80 @@ export function removeInfoFromFilesInfoById<T extends { id: string }>(
   }
   return;
 }
+
+/**
+ * File 数组转成 FileInfo 数组
+ * @param files File 数组
+ * @param retryCount 重试次数
+ */
+export function Files2FilesInfo(
+  files: Array<File>,
+  retryCount: number = 2
+): Array<FileInfo> {
+  const ret: Array<FileInfo> = [];
+  files.forEach((file, index) => {
+    ret.push({
+      type: 'file',
+      id: getId(),
+      file,
+      index,
+      retryCount,
+      progress: 0,
+      status: 'waiting',
+      loaded: 0
+    });
+  });
+  return ret;
+}
+
+/**
+ * 向 FileInfo 中添加 chunks 数组
+ * @param filesInfo FileInfo 数组
+ * @param chunkSize 分片大小
+ * @param chunkThreshold 开启分片上传的阈值
+ * @param chunkRetryCount 分片上传重试次数
+ */
+export function addChunksInfo(
+  filesInfo: Array<FileInfo>,
+  chunkSize: number = 1,
+  chunkThreshold: number = 0,
+  chunkRetryCount: number = 2
+) {
+  let thresholdSize: number = 0;
+  if (typeof chunkThreshold === 'number') {
+    thresholdSize = chunkThreshold * 1024 * 1024;
+  }
+  chunkSize = chunkSize * 1024 * 1024;
+
+  filesInfo.forEach((fileInfo, index) => {
+    const { file } = fileInfo;
+    const fileSize = file.size;
+    const len = Math.ceil(file.size / chunkSize);
+
+    if (fileSize > thresholdSize) {
+      if (!fileInfo.chunks) {
+        fileInfo.chunks = [];
+      }
+      for (let i = 0; i < len; i++) {
+        const nextIndex = i + 1;
+        const getChunk = () => {
+          if (i !== len - 1) {
+            return file.slice(i * chunkSize, nextIndex * chunkSize);
+          } else {
+            return file.slice(i * chunkSize, file.size + 1);
+          }
+        };
+        fileInfo.chunks.push({
+          type: 'chunk',
+          belongFile: fileInfo,
+          id: getId(),
+          chunk: getChunk(),
+          index: i,
+          retryCount: chunkRetryCount,
+          status: 'waiting',
+          loaded: 0
+        });
+      }
+    }
+  });
+}

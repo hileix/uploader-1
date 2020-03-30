@@ -1,80 +1,25 @@
 import Uploader from './uploader';
-import { throwError, getId, validateOptions } from './utils';
+import {
+  throwError,
+  validateOptions,
+  Files2FilesInfo,
+  addChunksInfo
+} from './utils';
 import { FileInfo, ExtendUploaderOptions, FilterFunction } from './interface';
 import axiosAdapter from './adapters/axiosAdapter';
 
-const getFilesInfo = (
-  files: Array<File>,
-  retryCount: number = 2
-): Array<FileInfo> => {
-  const ret: Array<FileInfo> = [];
-  files.forEach((file, index) => {
-    ret.push({
-      type: 'file',
-      id: getId(),
-      file,
-      index,
-      retryCount,
-      progress: 0,
-      status: 'waiting',
-      loaded: 0
-    });
-  });
-  return ret;
-};
-
-const addChunksInfoTo = (
-  filesInfo: Array<FileInfo>,
-  chunkSize: number = 1,
-  chunkThreshold: number = 0,
-  chunkRetryCount: number = 2
-) => {
-  let thresholdSize: number = 0;
-  if (typeof chunkThreshold === 'number') {
-    thresholdSize = chunkThreshold * 1024 * 1024;
-  }
-  chunkSize = chunkSize * 1024 * 1024;
-
-  filesInfo.forEach((fileInfo, index) => {
-    const { file } = fileInfo;
-    const fileSize = file.size;
-    const len = Math.ceil(file.size / chunkSize);
-
-    if (fileSize > thresholdSize) {
-      if (!fileInfo.chunks) {
-        fileInfo.chunks = [];
-      }
-      for (let i = 0; i < len; i++) {
-        const nextIndex = i + 1;
-        const getChunk = () => {
-          if (i !== len - 1) {
-            return file.slice(i * chunkSize, nextIndex * chunkSize);
-          } else {
-            return file.slice(i * chunkSize, file.size + 1);
-          }
-        };
-        fileInfo.chunks.push({
-          type: 'chunk',
-          belongFile: fileInfo,
-          id: getId(),
-          chunk: getChunk(),
-          index: i,
-          retryCount: chunkRetryCount,
-          status: 'waiting',
-          loaded: 0
-        });
-      }
-    }
-  });
-};
-
-function Filesfilter(
+/**
+ * 文件筛选：通过筛选存入 validFiles，未通过筛选的存入 inValidFiles
+ * @param files File 数组
+ * @param filterParams 过滤参数
+ *
+ * @param filterParams.maxSize 最大的尺寸，单位：B。可选
+ * @param filterParams.maxCount 最大的数量。可选
+ * @param filterParams.filter 过滤函数，(files: File[]): File[]。可选
+ */
+function getFilteredFiles(
   files: File[],
-  {
-    maxSize,
-    maxCount,
-    filter
-  }: {
+  filterParams: {
     maxSize?: number;
     maxCount?: number;
     filter?: FilterFunction | undefined;
@@ -83,6 +28,7 @@ function Filesfilter(
   validFiles: File[];
   inValidFiles: File[];
 } {
+  const { maxSize, maxCount, filter } = filterParams;
   let validFiles: File[] = [...files];
   const inValidFiles: File[] = [];
 
@@ -275,24 +221,26 @@ export default class Webuploader extends Uploader {
     const files: Array<File> = Array.from((e.target as any).files);
 
     // filter
-    let { validFiles, inValidFiles } = Filesfilter(files, {
+    let { validFiles, inValidFiles } = getFilteredFiles(files, {
       maxCount,
       maxSize,
       filter
     });
+
+    console.log({ validFiles });
 
     // sort
     if (sort) {
       validFiles = sort(validFiles);
     }
 
-    this.invalidFiles.concat(getFilesInfo(inValidFiles, retryCount));
+    this.invalidFiles.concat(Files2FilesInfo(inValidFiles, retryCount));
 
-    const filesInfo: Array<FileInfo> = getFilesInfo(validFiles, retryCount);
+    const filesInfo: Array<FileInfo> = Files2FilesInfo(validFiles, retryCount);
 
     // 分片上传
     if (chunked) {
-      addChunksInfoTo(filesInfo, chunkSize, chunkThreshold, chunkRetryCount);
+      addChunksInfo(filesInfo, chunkSize, chunkThreshold, chunkRetryCount);
     }
 
     this.allFiles = this.allFiles.concat(filesInfo);

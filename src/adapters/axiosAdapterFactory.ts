@@ -42,7 +42,8 @@ const axiosAdapterFactory = (options?: object): RequestAdapterType => {
       method,
       data: formData,
       headers: {
-        'content-type': 'multipart/form-data'
+        'content-type': 'multipart/form-data',
+        'accept': '*/*',
       },
       onUploadProgress: (progressEvent: any) => {
         let info: Info;
