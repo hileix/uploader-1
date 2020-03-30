@@ -1,8 +1,10 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import { RequestAdapterType, Info, ChunkInfo, FileInfo } from '../interface';
 const CancelToken = axios.CancelToken;
 
-const axiosAdapterFactory = (options?: object): RequestAdapterType => {
+const axiosAdapterFactory = (
+  options?: AxiosRequestConfig
+): RequestAdapterType => {
   const _options = options;
 
   const axiosAdapter: RequestAdapterType = ({
@@ -37,14 +39,22 @@ const axiosAdapterFactory = (options?: object): RequestAdapterType => {
 
     onStart(info);
 
+    let headers: any = {
+      'content-type': 'multipart/form-data'
+    };
+    if (_options && _options.headers) {
+      headers = {
+        ...headers,
+        ..._options.headers
+      };
+      delete _options.headers;
+    }
+
     axios({
       url,
       method,
       data: formData,
-      headers: {
-        'content-type': 'multipart/form-data',
-        'accept': '*/*',
-      },
+      headers,
       onUploadProgress: (progressEvent: any) => {
         let info: Info;
         if (uploadType === 'file') {

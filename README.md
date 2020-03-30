@@ -309,6 +309,26 @@ uploader.remove: (id: string) => boolean;
 uploader.removeEventListener: () => void;
 ```
 
+### 3. 自定义 `Request Config` 
+webuploader 使用的是 `axios` 请求库进行文件上传。有时我们需要修改请求时的一些[选项](https://github.com/axios/axios#request-config)：
+
+- 添加 `withCredentials` 选项，在跨域请求时带上 `cookie`
+
+此时可以使用下面的方法，对 `axios` 的 `Reqeust` 进行配置
+
+```typescript
+import { Webuploader, axiosAdapterFactory } from '@hife/uploader';
+
+Webuploader.configure({
+  requestAdapter: axiosAdapterFactory()({
+    withCredentials: true
+  })
+});
+
+export default Webuploader;
+```
+- 以上配置了一次之后，在别处引用都生效
+
 ## Todolist
 
 - [ ] 部署 storybook 到 github page，且能够正常查看例子
