@@ -59,7 +59,7 @@ export interface UploadOptions {
   method?: MethodType;
   /**
    * 接受的文件类型
-   * 默认值：'*\/*'
+   * 默认值：'*/*'
    * 值参照：https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#attr-accept
    */
   accept?: string;
@@ -310,9 +310,9 @@ uploader.removeEventListener: () => void;
 ```
 
 ### 3. 自定义 `Request Config` 
-webuploader 使用的是 `axios` 请求库进行文件上传。有时我们需要修改请求时的一些[选项](https://github.com/axios/axios#request-config)：
+webuploader 使用的是 `axios` 请求库进行文件上传。有时我们需要修改请求时的一些 [选项](https://github.com/axios/axios#request-config) 来实现一些功能，比如说：
 
-- 添加 `withCredentials` 选项，在跨域请求时带上 `cookie`
+- 配置 `withCredentials` 为 `true`，实现在跨域请求时带上 `cookie`
 
 此时可以使用下面的方法，对 `axios` 的 `Reqeust` 进行配置
 
