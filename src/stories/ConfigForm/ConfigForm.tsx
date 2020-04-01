@@ -42,7 +42,7 @@ function ConfigForm(props: {
   const onFinish = (values: any) => {
     const newValues = {
       ...values,
-      maxSize: values.maxSize ? values.maxSize * 1024 * 1024 : undefined
+      maxSize: values.maxSize ? values.maxSize : undefined
     };
     const { onChange } = props;
     onChange && onChange(newValues);

@@ -131,6 +131,10 @@ export interface UploadOptions {
    */
   sort?: FilterFunction;
   /**
+   * 校验完文件（maxSize/maxCount）的回调
+   */
+  onVerified?: OnVerifiedFn;
+  /**
    * 文件数量改变、文件状态改变时的回调
    * allFileInfo：所有上传的文件信息
    * statusChangedFileInfo：状态发生的文件信息
@@ -270,3 +274,9 @@ export interface RequestAdapterParams {
 export interface ExtendUploaderOptions extends UploadOptions {
   uploadChunkUrl?: string;
 }
+
+// verifiedParams：校验后的参数。当 verifiedParams 为 undefined 时，表示校验没有问题
+export type OnVerifiedFn = (verifiedParams?: {
+  type: 'MAX_SIZE' | 'MAX_COUNT'; // 验证未通过的类型：'MAX_SIZE' 表示有文件未通过 maxSize 的验证 | 'MAX_COUNT' 表示有文件未通过 maxCount 的验证
+  files: File[]; // 未通过验证的文件信息
+}) => void;

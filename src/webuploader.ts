@@ -5,7 +5,12 @@ import {
   Files2FilesInfo,
   addChunksInfo
 } from './utils';
-import { FileInfo, ExtendUploaderOptions, FilterFunction } from './interface';
+import {
+  FileInfo,
+  ExtendUploaderOptions,
+  FilterFunction,
+  OnVerifiedFn
+} from './interface';
 import axiosAdapter from './adapters/axiosAdapter';
 
 /**
@@ -22,31 +27,42 @@ function getFilteredFiles(
   filterParams: {
     maxSize?: number;
     maxCount?: number;
+    onVerified?: OnVerifiedFn;
     filter?: FilterFunction | undefined;
   }
 ): {
   validFiles: File[];
   inValidFiles: File[];
 } {
-  const { maxSize, maxCount, filter } = filterParams;
+  const { maxSize, maxCount, filter, onVerified } = filterParams;
   let validFiles: File[] = [...files];
   const inValidFiles: File[] = [];
 
+  let flag = false;
+
   // maxCount 筛选
   if (typeof maxCount === 'number' && maxCount < validFiles.length) {
-    validFiles.splice(maxCount, validFiles.length - maxCount);
+    const files = validFiles.splice(maxCount, validFiles.length - maxCount);
+    onVerified && onVerified({ type: 'MAX_COUNT', files });
+    flag = true;
   }
 
   // maxSize 筛选
   if (typeof maxSize === 'number') {
+    let files: File[] = [];
     validFiles = validFiles.filter(file => {
       if (file.size <= maxSize) {
         return true;
       } else {
         inValidFiles.push(file);
+        files.push(file);
         return false;
       }
     });
+    if (files.length) {
+      onVerified && onVerified({ type: 'MAX_SIZE', files });
+      flag = true;
+    }
   }
 
   // filter 函数筛选
@@ -55,6 +71,10 @@ function getFilteredFiles(
     if (!Array.isArray(validFiles)) {
       throw new Error('The filter function must return an array of files');
     }
+  }
+
+  if (!flag) {
+    onVerified && onVerified();
   }
 
   return { validFiles, inValidFiles };
@@ -220,7 +240,8 @@ export default class Webuploader extends Uploader {
       maxCount,
       filter,
       retryCount,
-      sort
+      sort,
+      onVerified
     } = this.options;
     const files: Array<File> = Array.from((e.target as any).files);
 
@@ -228,10 +249,9 @@ export default class Webuploader extends Uploader {
     let { validFiles, inValidFiles } = getFilteredFiles(files, {
       maxCount,
       maxSize,
-      filter
+      filter,
+      onVerified
     });
-
-    console.log({ validFiles });
 
     // sort
     if (sort) {

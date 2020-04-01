@@ -113,6 +113,10 @@ function FileUpload() {
     setPercent(Number(progress.toFixed(2)));
   };
 
+  const onVerified = (params: any) => {
+    console.log('onVerified:', params);
+  };
+
   useEffect(() => {
     const uploader = getWebuploaderInstance('#file-upload-input-1', {
       onChange,
@@ -123,7 +127,8 @@ function FileUpload() {
       onChunkSuccess,
       onComplete,
       onChunkComplete,
-      onProgress
+      onProgress,
+      onVerified
     });
 
     setUploader(uploader);
@@ -146,7 +151,8 @@ function FileUpload() {
       onChunkSuccess,
       onComplete,
       onChunkComplete,
-      onProgress
+      onProgress,
+      onVerified
     });
 
     setAllFiles([]);
@@ -154,7 +160,6 @@ function FileUpload() {
     setUploader(newUploader);
   };
 
-  console.log({ allFiles111: allFiles });
 
   return (
     <div className='webuploader-stories__wrapper'>
@@ -656,7 +661,6 @@ function BreakpointResume() {
 
             // 分片已存在服务器端，则直接设置该分片为成功上传的分片
             if (isChunkInBackend()) {
-              console.log({ uploader });
               uploader.toSuccessful(chunkInfo.id);
             } else {
               // 分片不存在服务端，则直接调用 callback，进行分片上传
