@@ -271,3 +271,11 @@ export function addChunksInfo(
     }
   });
 }
+
+/**
+ * 获取文件的类型
+ * @param file 文件
+ */
+export const getFileType = (file: File) => {
+  return file.type;
+};

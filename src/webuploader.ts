@@ -3,7 +3,8 @@ import {
   throwError,
   validateOptions,
   Files2FilesInfo,
-  addChunksInfo
+  addChunksInfo,
+  getFileType
 } from './utils';
 import {
   FileInfo,
@@ -18,13 +19,16 @@ import axiosAdapter from './adapters/axiosAdapter';
  * @param files File 数组
  * @param filterParams 过滤参数
  *
+ * @param filterParams.accept 能够选择的文件类型。可选
  * @param filterParams.maxSize 最大的尺寸，单位：B。可选
  * @param filterParams.maxCount 最大的数量。可选
+ * @param filterParams.onVerified 验证后的回调。可选
  * @param filterParams.filter 过滤函数，(files: File[]): File[]。可选
  */
 function getFilteredFiles(
   files: File[],
   filterParams: {
+    accept?: string;
     maxSize?: number;
     maxCount?: number;
     onVerified?: OnVerifiedFn;
@@ -34,11 +38,30 @@ function getFilteredFiles(
   validFiles: File[];
   inValidFiles: File[];
 } {
-  const { maxSize, maxCount, filter, onVerified } = filterParams;
+  const { accept, maxSize, maxCount, filter, onVerified } = filterParams;
   let validFiles: File[] = [...files];
   const inValidFiles: File[] = [];
 
   let flag = false;
+
+  // accept 筛选
+  if (accept) {
+    const acceptArray = accept.split(',').filter(Boolean);
+    const files: File[] = [];
+    validFiles = validFiles.filter(file => {
+      const type = getFileType(file);
+      if (acceptArray.includes(type)) {
+        return true;
+      }
+      inValidFiles.push(file);
+      files.push(file);
+      return false;
+    });
+    if (inValidFiles.length) {
+      onVerified && onVerified({ type: 'ACCEPT', files });
+      flag = true;
+    }
+  }
 
   // maxCount 筛选
   if (typeof maxCount === 'number' && maxCount < validFiles.length) {
@@ -241,12 +264,14 @@ export default class Webuploader extends Uploader {
       filter,
       retryCount,
       sort,
-      onVerified
+      onVerified,
+      accept
     } = this.options;
     const files: Array<File> = Array.from((e.target as any).files);
 
     // filter
     let { validFiles, inValidFiles } = getFilteredFiles(files, {
+      accept,
       maxCount,
       maxSize,
       filter,

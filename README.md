@@ -287,7 +287,11 @@ export interface FilterFunction {
 
 // verifiedParams：校验后的参数。当 verifiedParams 为 undefined 时，表示校验没有问题
 export type OnVerifiedFn = (verifiedParams?: {
-  type: 'MAX_SIZE' | 'MAX_COUNT'; // 验证未通过的类型：'MAX_SIZE' 表示有文件未通过 maxSize 的验证 | 'MAX_COUNT' 表示有文件未通过 maxCount 的验证
+  // 验证未通过的类型：
+  // 'MAX_SIZE' 表示有文件未通过 maxSize 的验证
+  // 'MAX_COUNT' 表示有文件未通过 maxCount 的验证
+  // 'ACCEPT' 表示有文件未通过 accept 的验证（在 firefox 中 accept 有 bug）
+  type: 'MAX_SIZE' | 'MAX_COUNT' | 'ACCEPT';
   files: File[]; // 未通过验证的文件信息
 }) => void;
 
