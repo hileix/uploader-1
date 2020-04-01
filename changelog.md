@@ -1,3 +1,6 @@
+## Release v1.3.0
+- feat:添加 onVerified 回调
+
 ## Release v1.2.0
 - feat:UploadOptions 添加 md5 和 chunkMD5 属性
 
