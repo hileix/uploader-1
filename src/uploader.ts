@@ -656,6 +656,25 @@ export default class Uploader {
           `[webuploader]: There are no files waiting to be uploaded!`
         );
       }
+      const md5Promise = new Promise((resolve, reject) => {
+        if (!this.options.md5 || (fileInfo as FileInfo).md5) {
+          resolve(true);
+        } else {
+          getFileMD5((fileInfo as FileInfo).file)
+            .then(md5 => {
+              (fileInfo as FileInfo).md5 = md5;
+              resolve(true);
+            })
+            .catch(err => {
+              console.error(err);
+            });
+        }
+      });
+      md5Promise.then(result => {
+        onBefore
+          ? onBefore(fileInfo as FileInfo, this.beforeUploadCallback)
+          : this.beforeUploadCallback();
+      });
     } else {
       chunkInfo = this.waitingUploadChunks[0];
       if (!chunkInfo) {
@@ -663,16 +682,28 @@ export default class Uploader {
           `[webuploader]: There are no chunks waiting to be uploaded!`
         );
       }
-    }
-
-    if (uploadType === 'file') {
-      onBefore
-        ? onBefore(fileInfo as FileInfo, this.beforeUploadCallback)
-        : this.beforeUploadCallback();
-    } else {
-      onChunkBefore
-        ? onChunkBefore(chunkInfo as ChunkInfo, this.beforeChunkUploadCallback)
-        : this.beforeChunkUploadCallback();
+      const md5Promise = new Promise((resolve, reject) => {
+        if (!this.options.chunkMD5 || (chunkInfo as ChunkInfo).md5) {
+          resolve(true);
+        } else {
+          getFileMD5((chunkInfo as ChunkInfo).chunk)
+            .then(md5 => {
+              (chunkInfo as ChunkInfo).md5 = md5;
+              resolve(true);
+            })
+            .catch(err => {
+              console.error(err);
+            });
+        }
+      });
+      md5Promise.then(result => {
+        onChunkBefore
+          ? onChunkBefore(
+              chunkInfo as ChunkInfo,
+              this.beforeChunkUploadCallback
+            )
+          : this.beforeChunkUploadCallback();
+      });
     }
   }
 
@@ -692,23 +723,8 @@ export default class Uploader {
 
     const fileInfo: FileInfo = this.waitingUploadFiles[0];
 
-    const onStart = (info: Info): Promise<boolean> => {
-      return new Promise((resolve, reject) => {
-        if (!this.options.md5 || info.md5) {
-          this.handleStartUpload(uploadType, info);
-          resolve(true);
-        } else {
-          getFileMD5((info as FileInfo).file)
-            .then(md5 => {
-              info.md5 = md5;
-              this.handleStartUpload(uploadType, info);
-              resolve(true);
-            })
-            .catch(err => {
-              console.error(err);
-            });
-        }
-      });
+    const onStart = (info: Info): void => {
+      this.handleStartUpload(uploadType, info);
     };
 
     const onSuccess = (info: Info, res: unknown): void => {
@@ -762,23 +778,8 @@ export default class Uploader {
 
     const _chunkInfo = this.waitingUploadChunks[0];
 
-    const onStart = (info: Info): Promise<boolean> => {
-      return new Promise((resolve, reject) => {
-        if (!this.options.chunkMD5 || info.md5) {
-          this.handleStartUpload(uploadType, info);
-          resolve(true);
-        } else {
-          getFileMD5((info as ChunkInfo).chunk)
-            .then(md5 => {
-              info.md5 = md5;
-              this.handleStartUpload(uploadType, info);
-              resolve(true);
-            })
-            .catch(err => {
-              console.error(err);
-            });
-        }
-      });
+    const onStart = (info: Info): void => {
+      this.handleStartUpload(uploadType, info);
     };
 
     const onSuccess = (info: Info, res: unknown): void => {

@@ -260,7 +260,7 @@ export interface RequestAdapterParams {
   chunkInfo: ChunkInfo | null;
   method: MethodType;
   // 开始上传文件（分片）的回调
-  onStart: (info: Info) => Promise<boolean>;
+  onStart: (info: Info) => void;
   // 上传文件（分片）成功的回调
   onSuccess: (info: Info, res: unknown) => void;
   // 上传文件（分片）失败的回调

@@ -67,6 +67,7 @@ function FileUpload() {
     setAllFiles(filesInfo);
   };
   const onBefore = (fileInfo: FileInfo, callback: any) => {
+    console.log({ fileInfo });
     callback();
   };
 
@@ -159,7 +160,6 @@ function FileUpload() {
     setPercent(0);
     setUploader(newUploader);
   };
-
 
   return (
     <div className='webuploader-stories__wrapper'>
@@ -270,6 +270,10 @@ function ChunkUpload() {
         setAllFiles(filesInfo);
       },
       onBefore: (fileInfo: FileInfo, callback: any) => {
+        callback();
+      },
+      onChunkBefore: (info: any, callback) => {
+        console.log({ info });
         callback();
       },
       onStart: (fileInfo: FileInfo) => {

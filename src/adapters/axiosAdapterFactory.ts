@@ -37,56 +37,57 @@ const axiosAdapterFactory = (
       );
     }
 
-    onStart(info).then(result => {
-      let headers: any = {
-        'content-type': 'multipart/form-data'
+    onStart(info);
+
+    let headers: any = {
+      'content-type': 'multipart/form-data'
+    };
+    if (_options && _options.headers) {
+      headers = {
+        ...headers,
+        ..._options.headers
       };
-      if (_options && _options.headers) {
-        headers = {
-          ...headers,
-          ..._options.headers
-        };
-        delete _options.headers;
-      }
-      axios({
-        url,
-        method,
-        data: formData,
-        headers,
-        onUploadProgress: (progressEvent: any) => {
-          let info: Info;
-          if (uploadType === 'file') {
-            info = fileInfo as FileInfo;
-          } else {
-            info = chunkInfo as ChunkInfo;
-          }
-          onProgress(progressEvent, info);
-        },
-        cancelToken: new CancelToken(function executor(c) {
-          info.cancel = c;
-        }),
-        ..._options
+      delete _options.headers;
+    }
+
+    axios({
+      url,
+      method,
+      data: formData,
+      headers,
+      onUploadProgress: (progressEvent: any) => {
+        let info: Info;
+        if (uploadType === 'file') {
+          info = fileInfo as FileInfo;
+        } else {
+          info = chunkInfo as ChunkInfo;
+        }
+        onProgress(progressEvent, info);
+      },
+      cancelToken: new CancelToken(function executor(c) {
+        info.cancel = c;
+      }),
+      ..._options
+    })
+      .then(res => {
+        // 上传成功
+        onSuccess(info, res);
+        onAfter(info);
       })
-        .then(res => {
-          // 上传成功
-          onSuccess(info, res);
+      .catch(err => {
+        // 取消上传导致报错
+        if (
+          info.cancel &&
+          err.__CANCEL__ &&
+          err.message === '@hife/uploader:Cancel the upload'
+        ) {
           onAfter(info);
-        })
-        .catch(err => {
-          // 取消上传导致报错
-          if (
-            info.cancel &&
-            err.__CANCEL__ &&
-            err.message === '@hife/uploader:Cancel the upload'
-          ) {
-            onAfter(info);
-          } else {
-            // 上传失败
-            onError(err, info);
-            onAfter(info);
-          }
-        });
-    });
+        } else {
+          // 上传失败
+          onError(err, info);
+          onAfter(info);
+        }
+      });
   };
   return axiosAdapter;
 };
