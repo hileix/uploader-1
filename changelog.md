@@ -1,3 +1,6 @@
+## Release v1.4.1
+- fix:修复在 onBefore 和 onChunkBefore 中拿不到文件/分片 md5 的 bug
+
 ## Release v1.4.0
 - feat:添加 onVerified 回调参数 type 的值 'ACCEPT'，用于兼容 Firefox 对 input accept 属性在某种情况下不兼容的 bug
 
