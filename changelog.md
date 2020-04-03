@@ -1,3 +1,6 @@
+## Release v1.5.0
+- feat:添加 onSuccessVerify 和 onChunkSuccessVerify 回调 Closes #8
+
 ## Release v1.4.2
 - fix:修复 accept 为 'image/*' 时 onVerified 回调传 type 为 'ACCEPT' 的错误参数的 bug Closes #3
 
