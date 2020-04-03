@@ -273,9 +273,21 @@ export function addChunksInfo(
 }
 
 /**
- * 获取文件的类型
+ * 获取文件的类型和格式
  * @param file 文件
  */
 export const getFileType = (file: File) => {
-  return file.type;
+  const arr = file.type.split('/');
+  return {
+    type: arr[0],
+    format: arr[1]
+  };
+};
+
+export const getTypeFromat = (singleAccept: string) => {
+  const arr = singleAccept.split('/');
+  return {
+    type: arr[0],
+    format: arr[1]
+  };
 };

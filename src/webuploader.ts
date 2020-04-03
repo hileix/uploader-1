@@ -4,7 +4,8 @@ import {
   validateOptions,
   Files2FilesInfo,
   addChunksInfo,
-  getFileType
+  getFileType,
+  getTypeFromat
 } from './utils';
 import {
   FileInfo,
@@ -49,8 +50,21 @@ function getFilteredFiles(
     const acceptArray = accept.split(',').filter(Boolean);
     const files: File[] = [];
     validFiles = validFiles.filter(file => {
-      const type = getFileType(file);
-      if (acceptArray.includes(type)) {
+      const { type, format } = getFileType(file);
+      console.log({ type, format });
+      // ['image/*', 'image/png']
+      let ret = false;
+      acceptArray.some(item => {
+        const typeFormat = getTypeFromat(item);
+        console.log({ typeFormat });
+        if (
+          typeFormat.type === type &&
+          (typeFormat.format === format || typeFormat.format === '*')
+        ) {
+          ret = true;
+        }
+      });
+      if (ret) {
         return true;
       }
       inValidFiles.push(file);
