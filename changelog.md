@@ -1,3 +1,6 @@
+## Release v1.7.0
+- feat:retry 实例方法添加 boolean 返回值：返回值为 true 时，表示正在重试；否则表示没有重试次数了，不进行重试
+
 ## Release v1.5.0
 - feat:添加 onSuccessVerify 和 onChunkSuccessVerify 回调 Closes #8
 
