@@ -129,6 +129,11 @@ export interface UploadOptions {
    */
   onVerified?: OnVerifiedFn;
   /**
+   * 有新的文件被加入队列时的回调
+   * filesInfo：被加入到队列的文件信息
+   */
+  onFilesInfoQueued?: (filesInfo: FileInfo[]) => void;
+  /**
    * 文件数量改变、文件状态改变时的回调
    * allFileInfo：所有上传的文件信息
    * statusChangedFileInfo：状态发生的文件信息

@@ -277,7 +277,8 @@ export default class Webuploader extends Uploader {
       retryCount,
       sort,
       onVerified,
-      accept
+      accept,
+      onFilesInfoQueued,
     } = this.options;
     const files: Array<File> = Array.from((e.target as any).files);
 
@@ -307,6 +308,7 @@ export default class Webuploader extends Uploader {
     this.allFiles = this.allFiles.concat(filesInfo);
     this.waitingUploadFiles = this.waitingUploadFiles.concat(filesInfo);
 
+    onFilesInfoQueued && onFilesInfoQueued(filesInfo);
     onChange && onChange([...this.allFiles]);
 
     if (this.options.autoUpload) {

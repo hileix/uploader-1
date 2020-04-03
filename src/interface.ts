@@ -131,9 +131,14 @@ export interface UploadOptions {
    */
   sort?: FilterFunction;
   /**
-   * 校验完文件（maxSize/maxCount）的回调
+   * 校验完文件（maxSize/maxCount/accept）的回调
    */
   onVerified?: OnVerifiedFn;
+  /**
+   * 有新的文件被加入队列时的回调
+   * filesInfo：被加入到队列的文件信息
+   */
+  onFilesInfoQueued?: (filesInfo: FileInfo[]) => void;
   /**
    * 文件数量改变、文件状态改变时的回调
    * allFileInfo：所有上传的文件信息
