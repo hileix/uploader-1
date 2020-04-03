@@ -221,13 +221,18 @@ export default class Uploader {
   /**
    * 文件（分片）重试上传
    */
-  public retry(id: string) {
+  public retry(id: string): boolean {
     const info = getInfoInFilesInfoById(id, this.allFiles);
     if (!info) {
       throw new Error('The retry upload file does not exist');
     }
     const { onRetry, onChunkRetry, onChange } = this.options;
     const uploadType = info.type;
+
+    if (info.retryCount <= 0) {
+      return false;
+    }
+
     if (uploadType === 'file') {
       // 不按照队列出队的顺序删除 uploadingFiles 中的元素是避免后传的文件（分片）的响应先回来
       // 通过 id 删除，100% 确定删除正确
@@ -264,6 +269,8 @@ export default class Uploader {
     if (this.theRemainingThreads > 0) {
       this.loopStart(this.theRemainingThreads);
     }
+
+    return true;
   }
 
   /**

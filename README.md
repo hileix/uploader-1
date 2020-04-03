@@ -350,7 +350,7 @@ uploader.toSuccessful: (id: string) => void;
 uploader.remove: (id: string) => boolean;
 
 /**
- * 对一个文件（分片）进行重试上传
+ * 对一个文件（分片）进行重试上传。返回值为 true 时，表示正在重试；否则表示没有重试次数了，不进行重试
  * id：文件（分片）的 id
  */
 uploader.retry: (id: string) => boolean;
