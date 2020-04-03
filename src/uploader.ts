@@ -221,7 +221,7 @@ export default class Uploader {
   /**
    * 文件（分片）重试上传
    */
-  private retry(id: string) {
+  public retry(id: string) {
     const info = getInfoInFilesInfoById(id, this.allFiles);
     if (!info) {
       throw new Error('The retry upload file does not exist');

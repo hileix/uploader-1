@@ -348,6 +348,13 @@ uploader.toSuccessful: (id: string) => void;
  * id：文件的 id
  */
 uploader.remove: (id: string) => boolean;
+
+/**
+ * 对一个文件（分片）进行重试上传
+ * id：文件（分片）的 id
+ */
+uploader.retry: (id: string) => boolean;
+
 /**
  * 移除对 input change 事件的监听
  * 注意：在第二次（包含第二次）之后对同一个 input 实例化时，需要先调用方法
