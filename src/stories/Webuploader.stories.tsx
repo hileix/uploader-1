@@ -118,6 +118,11 @@ function FileUpload() {
     console.log('onVerified:', params);
   };
 
+  const onSuccessVerify = (fileInfo, res, callback) => {
+    console.log({ fileInfo, res, callback });
+    callback();
+  };
+
   useEffect(() => {
     const uploader = getWebuploaderInstance('#file-upload-input-1', {
       onChange,
@@ -129,7 +134,8 @@ function FileUpload() {
       onComplete,
       onChunkComplete,
       onProgress,
-      onVerified
+      onVerified,
+      onSuccessVerify
     });
 
     setUploader(uploader);
@@ -225,6 +231,10 @@ function ChunkUpload() {
       },
       onSuccess: () => {
         log.success(`<<<<<< 第 ${successFileIndex++} 个【文件】上传成功！`);
+      },
+      onChunkSuccessVerify: (chunkInfo, res, callback) => {
+        console.log({ chunkInfo, res, callback });
+        callback();
       },
       onChunkSuccess: () => {
         log.success(`<<< 第 ${successChunkIndex++} 个【分片】上传成功！`);

@@ -743,6 +743,15 @@ export default class Uploader {
       this.handleProgressChange(uploadType, progressEvent, info);
     };
 
+    const onSuccessVerify = (
+      info: Info,
+      res: unknown,
+      callback: (errorMessage?: string) => void
+    ) => {
+      const { onSuccessVerify } = this.options;
+      onSuccessVerify && onSuccessVerify(info as FileInfo, res, callback);
+    };
+
     uploadRequest(requestAdapter || Uploader.requestAdapter, {
       url,
       fileInfo,
@@ -753,7 +762,8 @@ export default class Uploader {
       onSuccess,
       onError,
       onAfter,
-      onProgress
+      onProgress,
+      onSuccessVerify
     });
   };
 
@@ -798,6 +808,16 @@ export default class Uploader {
       this.handleProgressChange(uploadType, progressEvent, info);
     };
 
+    const onSuccessVerify = (
+      info: Info,
+      res: unknown,
+      callback: (errorMessage?: string) => void
+    ) => {
+      const { onChunkSuccessVerify } = this.options;
+      onChunkSuccessVerify &&
+        onChunkSuccessVerify(info as ChunkInfo, res, callback);
+    };
+
     uploadRequest(requestAdapter || Uploader.requestAdapter, {
       url: uploadChunkUrl || url,
       fileInfo: null,
@@ -808,7 +828,8 @@ export default class Uploader {
       onSuccess,
       onError,
       onAfter,
-      onProgress
+      onProgress,
+      onSuccessVerify
     });
   };
 }

@@ -17,7 +17,8 @@ const axiosAdapterFactory = (
     onSuccess,
     onError,
     onAfter,
-    onProgress
+    onProgress,
+    onSuccessVerify
   }) => {
     let file: File | null, chunk: Blob | null;
     let formData: FormData = new FormData();
@@ -70,9 +71,18 @@ const axiosAdapterFactory = (
       ..._options
     })
       .then(res => {
-        // 上传成功
-        onSuccess(info, res);
-        onAfter(info);
+        const successVerifyCallback = (errorMessage?: string) => {
+          if (errorMessage) {
+            throw new Error(errorMessage);
+          }
+          // 上传成功
+          onSuccess(info, res);
+          onAfter(info);
+        };
+
+        onSuccessVerify
+          ? onSuccessVerify(info, res, successVerifyCallback)
+          : successVerifyCallback();
       })
       .catch(err => {
         // 取消上传导致报错

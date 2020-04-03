@@ -1,3 +1,6 @@
+## Release v1.4.2
+- fix:修复 accept 为 'image/*' 时 onVerified 回调传 type 为 'ACCEPT' 的错误参数的 bug Closes #3
+
 ## Release v1.4.1
 - fix:修复在 onBefore 和 onChunkBefore 中拿不到文件/分片 md5 的 bug
 

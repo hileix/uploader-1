@@ -51,12 +51,10 @@ function getFilteredFiles(
     const files: File[] = [];
     validFiles = validFiles.filter(file => {
       const { type, format } = getFileType(file);
-      console.log({ type, format });
       // ['image/*', 'image/png']
       let ret = false;
       acceptArray.some(item => {
         const typeFormat = getTypeFromat(item);
-        console.log({ typeFormat });
         if (
           typeFormat.type === type &&
           (typeFormat.format === format || typeFormat.format === '*')

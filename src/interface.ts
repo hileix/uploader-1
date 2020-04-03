@@ -158,6 +158,17 @@ export interface UploadOptions {
    */
   onStart?: (fileInfo: FileInfo) => void;
   /**
+   * 文件是否上传成功的验证回调（可使用此回调对服务端返回的数据进行验证，看是否真的上传成功了）
+   * fileInfo：文件信息
+   * res：服务端响应的数据
+   * callback：回调函数。当传入 errorMessage 参数，表示有错误，该文件上传是否；否则文件上传成功
+   */
+  onSuccessVerify?: (
+    fileInfo: FileInfo,
+    res: unknown,
+    callback: (errorMesssage?: string) => void
+  ) => void;
+  /**
    * 上传成功的回调
    * fileInfo：文件信息
    * res：服务端响应的数据
@@ -193,6 +204,17 @@ export interface UploadOptions {
    * chunkInfo：分片信息
    */
   onChunkStart?: (chunkInfo: ChunkInfo) => void;
+  /**
+   * 分片是否上传成功的验证回调（可使用此回调对后端返回的数据进行验证，看是否真的上传成功了）
+   * chunkInfo：分片信息
+   * res：服务端响应的数据
+   * callback：回调函数。当传入 errorMessage 参数，表示有错误，该分片上传是否；否则分片上传成功
+   */
+  onChunkSuccessVerify?: (
+    chunkInfo: ChunkInfo,
+    res: unknown,
+    callback: (errorMesssage?: string) => void
+  ) => void;
   /**
    * 上传分片成功的回调
    * chunkInfo：分片信息
@@ -269,6 +291,12 @@ export interface RequestAdapterParams {
   onAfter: (info: Info) => void;
   // 上传进度变化时的回调
   onProgress: (progressEvent: any, info: Info) => void;
+  // 是否上传成功的验证回调
+  onSuccessVerify?: (
+    info: Info,
+    res: unknown,
+    callback: (errorMessage?: string) => void
+  ) => void;
 }
 
 export interface ExtendUploaderOptions extends UploadOptions {
