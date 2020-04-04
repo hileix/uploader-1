@@ -1,3 +1,7 @@
+## Release v1.9.0
+- feat:onError 回调添加 info 参数 
+- fix:修复上传重试文件时不会调用 onError 回调的 bug
+
 ## Release v1.8.0
 - feat:添加 onFilesInfoQueued 回调
 - docs:update changelog.md

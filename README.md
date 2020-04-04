@@ -176,8 +176,9 @@ export interface UploadOptions {
   /**
    * 上传失败的回调
    * error：错误信息
+   * info：上传失败的文件（分片）信息
    */
-  onError?: (error: Error) => void;
+  onError?: (error: Error, info: Info) => void;
   /**
    * 文件上传失败时重试的回调
    * fileInfo：文件信息
