@@ -63,11 +63,12 @@ function FileUpload() {
   let successFileIndex = 1;
   let successChunkIndex = 1;
 
-  const onChange = (filesInfo: any) => {
+  const onChange = (filesInfo: any, info: any) => {
+    console.log('onChange:', info);
     setAllFiles(filesInfo);
   };
   const onBefore = (fileInfo: FileInfo, callback: any) => {
-    console.log({ fileInfo });
+    // console.log({ fileInfo });
     callback();
   };
 
@@ -126,7 +127,11 @@ function FileUpload() {
   const onFilesInfoQueued = (filesInfo: FileInfo[]) => {
     console.log('onFilesInfoQueued:', filesInfo);
   };
-  
+
+  const onError = (error: any, info: any) => {
+    console.log('onError:', info);
+  };
+
   useEffect(() => {
     const uploader = getWebuploaderInstance('#file-upload-input-1', {
       onChange,
@@ -141,6 +146,7 @@ function FileUpload() {
       onVerified,
       onSuccessVerify,
       onFilesInfoQueued,
+      onError
     });
 
     setUploader(uploader);
@@ -166,6 +172,7 @@ function FileUpload() {
       onProgress,
       onVerified,
       onFilesInfoQueued,
+      onError
     });
 
     setAllFiles([]);

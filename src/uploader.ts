@@ -233,6 +233,8 @@ export default class Uploader {
       return false;
     }
 
+    info.retryCount--;
+
     if (uploadType === 'file') {
       // 不按照队列出队的顺序删除 uploadingFiles 中的元素是避免后传的文件（分片）的响应先回来
       // 通过 id 删除，100% 确定删除正确
@@ -476,7 +478,6 @@ export default class Uploader {
     this.uploadingCount--;
     // 还有剩余的重试次数
     if (info.retryCount) {
-      info.retryCount--;
       this.retry(info.id);
       return;
     }
@@ -507,7 +508,8 @@ export default class Uploader {
 
       fileInfo.progress = 100;
 
-      onError && onError(error);
+      onChange && onChange([...this.allFiles], { ...fileInfo });
+      onError && onError(error, info);
     } else {
       // 不按照队列出队的顺序删除 uploadingFiles 中的元素是避免后传的文件（分片）的响应先回来
       // 通过 id 删除，100% 确定删除正确
@@ -549,7 +551,7 @@ export default class Uploader {
       fileInfo.progress = 100;
 
       onChange && onChange([...this.allFiles], { ...fileInfo });
-      onError && onError(error);
+      onError && onError(error, info);
     }
 
     // 还有正在上传的文件
