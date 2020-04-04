@@ -221,6 +221,7 @@ function ChunkUpload() {
     let startChunkIndex = 1;
     let successFileIndex = 1;
     let successChunkIndex = 1;
+    let flag = false;
     const uploader = getWebuploaderInstance('#file-upload-input-2', {
       ...defaultConfig,
 
@@ -264,13 +265,25 @@ function ChunkUpload() {
         startFileIndex = 1;
       },
       onChunkComplete: (uploadedFile: FileInfo, callback: any) => {
-        console.log('一个文件的所有分片都上传成功了！');
         successChunkIndex = 1;
         startChunkIndex = 1;
-        callback({
-          fileInfo: uploadedFile,
-          res: {}
-        });
+        if (flag) {
+          callback({
+            errorMessage: '出错了',
+            fileInfo: uploadedFile,
+            res: {},
+            // isRetry: false
+          });
+          // uploader.retry(uploadedFile.id);
+          flag = false;
+        } else {
+          callback({
+            // errorMessage: '出错了',
+            fileInfo: uploadedFile,
+            res: {}
+          });
+          flag = true;
+        }
       },
       onProgress: (progress: number, filesInfo: any) => {
         setAllFiles(filesInfo);

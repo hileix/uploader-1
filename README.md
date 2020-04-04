@@ -240,13 +240,19 @@ export interface UploadOptions {
   /**
    * 一个文件的所有分片都上传完成的回调
    * uploadedFileInfo：文件信息
-   * callback：回调。当传入 errorMessage 参数，表示有错误，该文件上传失败；否则表示上传成功
+   * callback：回调
+   *   callbackParams：回调参数
+   *     errorMessage：当传入 errorMessage 参数，表示有错误，该文件上传失败；否则表示上传成功
+   *     isRetry：是否对该文件进行上传重试。可选，默认值：true
+   *     fileInfo：文件信息。必传
+   *     res：服务端返回的数据。必传
    */
   onChunkComplete?: (
     uploadedFileInfo: FileInfo,
     callback: (callbackParams: {
       // errorMessage 存在时，说明出错了
       errorMessage?: string;
+      isRetry?: booelan;
       fileInfo: FileInfo;
       res: unknown;
     }) => void

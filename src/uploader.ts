@@ -229,8 +229,8 @@ export default class Uploader {
     const { onRetry, onChunkRetry, onChange } = this.options;
     const uploadType = info.type;
 
-    if (info.retryCount <= 0) {
-      return false;
+    if (info.retryCount === 0) {
+      info.retryCount = this.options.retryCount || 2;
     }
 
     info.retryCount--;
@@ -449,19 +449,26 @@ export default class Uploader {
   chunkCompleteCallback = ({
     errorMessage,
     fileInfo,
-    res
+    res,
+    isRetry = true
   }: {
     errorMessage?: string;
     fileInfo: FileInfo;
     res: unknown;
+    isRetry?: boolean;
   }) => {
     if (errorMessage) {
-      this.invalidFiles = this.invalidFiles.concat(
-        this.waitingUploadFiles.shift() as FileInfo
-      );
-      return;
+      if (isRetry) {
+        fileInfo.retryCount = this.options.retryCount || 2;
+      } else {
+        fileInfo.retryCount = 0;
+      }
+      // 出错
+      this.handleErrorUpload('file', fileInfo, new Error(errorMessage));
+    } else {
+      // 成功
+      this.handleSuccessUpload('file', fileInfo, res);
     }
-    this.handleSuccessUpload('file', fileInfo, res);
   };
 
   /**
