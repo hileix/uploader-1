@@ -1,3 +1,6 @@
+## Release v1.9.1
+- fix:修复 onChunkComplete 回调 callback 参数执行后逻辑错误的 bug
+
 ## Release v1.9.0
 - feat:onError 回调添加 info 参数 
 - fix:修复上传重试文件时不会调用 onError 回调的 bug
