@@ -1,6 +1,6 @@
 {
   "name": "@hife/uploader",
-  "version": "1.9.2",
+  "version": "1.9.3",
   "main": "./lib/index.js",
   "dependencies": {
     "@hife/browser-md5-file": "^1.0.1",
