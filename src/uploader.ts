@@ -459,7 +459,7 @@ export default class Uploader {
   }) => {
     if (errorMessage) {
       if (isRetry) {
-        this.loadedSize -= fileInfo.file.size;
+        this.loadedSize -= fileInfo.loaded;
 
         fileInfo.retryCount = this.options.retryCount || 2;
       } else {
