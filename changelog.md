@@ -1,3 +1,6 @@
+## Release v1.9.6
+- fix:修复调用 toSuccessful 时报错的 bug
+
 ## Release v1.9.5
 - fix:修复重试上传时同时上传文件数量错误的 bug
 
