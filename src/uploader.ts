@@ -366,9 +366,6 @@ export default class Uploader {
     info: Info,
     res?: unknown
   ) => {
-    if (this.uploadingCount) {
-      this.uploadingCount--;
-    }
     if (uploadType === 'file') {
       const _info = info as FileInfo;
       const { onSuccess, onChange } = this.options;
@@ -402,6 +399,9 @@ export default class Uploader {
           onComplete && onComplete([...this.uploadedFiles]);
         }
       }
+      if (this.uploadingCount) {
+        this.uploadingCount--;
+      }
     } else {
       const _info = info as ChunkInfo;
       const { onChunkSuccess } = this.options;
@@ -423,6 +423,9 @@ export default class Uploader {
 
       // 还有等待上传的分片
       if (this.waitingUploadChunks.length) {
+        if (this.uploadingCount) {
+          this.uploadingCount--;
+        }
         if (this.theRemainingThreads > 0) {
           this.loopStart(
             Math.min(this.theRemainingThreads, this.waitingUploadChunks.length)
@@ -435,11 +438,22 @@ export default class Uploader {
           const { onChunkComplete } = this.options;
           const uploadedFile = this.uploadedChunks[0].belongFile;
 
-          onChunkComplete &&
-            onChunkComplete(uploadedFile, this.chunkCompleteCallback);
-
           // 当一个文件所有的分片都上传完成了，就重置 this.uploadedChunks 的状态
           this.uploadedChunks = [];
+
+          const _chunkCompleteCallback = (params: any) => {
+            if (this.uploadingCount) {
+              this.uploadingCount--;
+            }
+            this.chunkCompleteCallback(params);
+          };
+
+          onChunkComplete
+            ? onChunkComplete(uploadedFile, _chunkCompleteCallback)
+            : _chunkCompleteCallback({
+                fileInfo: uploadedFile,
+                res: {},
+              });
         }
       }
     }
