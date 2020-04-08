@@ -1,3 +1,6 @@
+## Release v1.9.4
+- fix:修复 onProgress 回调第一个参数错误的 bug
+
 ## Release v1.9.3
 - fix:修复 onProgress 在重试时第一个参数错误的 bug
 

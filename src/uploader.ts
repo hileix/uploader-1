@@ -431,7 +431,6 @@ export default class Uploader {
       } else {
         // 一个文件的所有分片都上传完了
         if (!this.waitingUploadChunks.length && !this.uploadingChunks.length) {
-          this.uploadingCount = 0;
           this.allChunks = [];
           const { onChunkComplete } = this.options;
           const uploadedFile = this.uploadedChunks[0].belongFile;
@@ -459,7 +458,7 @@ export default class Uploader {
   }) => {
     if (errorMessage) {
       if (isRetry) {
-        this.loadedSize -= fileInfo.loaded;
+        this.loadedSize -= fileInfo.file.size;
         fileInfo.loaded = 0;
 
         fileInfo.retryCount = this.options.retryCount || 2;
@@ -485,7 +484,9 @@ export default class Uploader {
   ) => {
     this.loadedSize -= info.loaded;
 
-    this.uploadingCount--;
+    if (this.uploadingCount) {
+      this.uploadingCount--;
+    }
     // 还有剩余的重试次数
     if (info.retryCount) {
       this.retry(info.id);
