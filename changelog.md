@@ -1,3 +1,6 @@
+## Release v1.9.5
+- fix:修复重试上传时同时上传文件数量错误的 bug
+
 ## Release v1.9.4
 - fix:修复 onProgress 回调第一个参数错误的 bug
 
