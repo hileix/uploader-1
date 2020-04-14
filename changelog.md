@@ -1,3 +1,6 @@
+## Release v1.9.7
+- fix:修复 maxCount 参数无效的 bug
+
 ## Release v1.9.6
 - fix:修复调用 toSuccessful 时报错的 bug
 
