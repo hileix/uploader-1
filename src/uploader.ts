@@ -2,7 +2,7 @@ import {
   throwError,
   getInfoInFilesInfoById,
   removeInfoFromFilesInfoById,
-  getFileMD5,
+  getFileMD5
 } from './utils';
 import {
   FileInfo,
@@ -13,7 +13,7 @@ import {
   RequestAdapterParams,
   Info,
   UploadType,
-  ExtendUploaderOptions,
+  ExtendUploaderOptions
 } from './interface';
 
 const DEFAULT_THREADS = 1;
@@ -48,7 +48,7 @@ export default class Uploader {
       autoUpload,
       threads,
       ...restOption,
-      uploadChunkUrl: _uploadChunkUrl,
+      uploadChunkUrl: _uploadChunkUrl
     };
 
     this.validateOptions(this.options);
@@ -104,7 +104,7 @@ export default class Uploader {
       errorUploadChunks: this.errorUploadChunks,
 
       loadedSize: this.loadedSize,
-      totalSize: this.totalSize,
+      totalSize: this.totalSize
     };
   }
 
@@ -145,7 +145,7 @@ export default class Uploader {
       uploadedChunks: this.uploadedChunks,
       errorUploadChunks: this.errorUploadChunks,
 
-      loadedSize: this.loadedSize,
+      loadedSize: this.loadedSize
     };
   }
 
@@ -197,8 +197,8 @@ export default class Uploader {
       this.uploadingFiles,
       this.uploadedFiles,
       this.errorUploadFiles,
-      this.invalidFiles,
-    ].forEach((arr) => {
+      this.invalidFiles
+    ].forEach(arr => {
       const ret = !!removeInfoFromFilesInfoById(id, arr);
       if (!isRemove && ret) {
         isRemove = true;
@@ -288,7 +288,7 @@ export default class Uploader {
         // 分片上传（上传文件的第一片时）
         if (!this.waitingUploadChunks.length) {
           this.waitingUploadChunks = [
-            ...(this.waitingUploadFiles[0].chunks as Array<ChunkInfo>),
+            ...(this.waitingUploadFiles[0].chunks as Array<ChunkInfo>)
           ];
           this.allChunks = [...this.waitingUploadChunks];
         }
@@ -387,6 +387,10 @@ export default class Uploader {
 
       this.uploadedFiles.push(fileInfo);
 
+      if (this.uploadingCount) {
+        this.uploadingCount--;
+      }
+
       // 还有正在上传的文件
       if (this.waitingUploadFiles.length) {
         if (this.theRemainingThreads > 0) {
@@ -398,9 +402,6 @@ export default class Uploader {
           const { onComplete } = this.options;
           onComplete && onComplete([...this.uploadedFiles]);
         }
-      }
-      if (this.uploadingCount) {
-        this.uploadingCount--;
       }
     } else {
       const _info = info as ChunkInfo;
@@ -452,7 +453,7 @@ export default class Uploader {
             ? onChunkComplete(uploadedFile, _chunkCompleteCallback)
             : _chunkCompleteCallback({
                 fileInfo: uploadedFile,
-                res: {},
+                res: {}
               });
         }
       }
@@ -463,7 +464,7 @@ export default class Uploader {
     errorMessage,
     fileInfo,
     res,
-    isRetry = true,
+    isRetry = true
   }: {
     errorMessage?: string;
     fileInfo: FileInfo;
@@ -695,16 +696,16 @@ export default class Uploader {
           resolve(true);
         } else {
           getFileMD5((fileInfo as FileInfo).file)
-            .then((md5) => {
+            .then(md5 => {
               (fileInfo as FileInfo).md5 = md5;
               resolve(true);
             })
-            .catch((err) => {
+            .catch(err => {
               console.error(err);
             });
         }
       });
-      md5Promise.then((result) => {
+      md5Promise.then(result => {
         onBefore
           ? onBefore(fileInfo as FileInfo, this.beforeUploadCallback)
           : this.beforeUploadCallback();
@@ -721,16 +722,16 @@ export default class Uploader {
           resolve(true);
         } else {
           getFileMD5((chunkInfo as ChunkInfo).chunk)
-            .then((md5) => {
+            .then(md5 => {
               (chunkInfo as ChunkInfo).md5 = md5;
               resolve(true);
             })
-            .catch((err) => {
+            .catch(err => {
               console.error(err);
             });
         }
       });
-      md5Promise.then((result) => {
+      md5Promise.then(result => {
         onChunkBefore
           ? onChunkBefore(
               chunkInfo as ChunkInfo,
@@ -797,7 +798,7 @@ export default class Uploader {
       onError,
       onAfter,
       onProgress,
-      onSuccessVerify,
+      onSuccessVerify
     });
   };
 
@@ -863,7 +864,7 @@ export default class Uploader {
       onError,
       onAfter,
       onProgress,
-      onSuccessVerify,
+      onSuccessVerify
     });
   };
 }
