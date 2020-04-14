@@ -1,3 +1,6 @@
+## Release v1.9.8
+- fix:修复上传文件上传完一个后就不会继续上传的 bug
+
 ## Release v1.9.7
 - fix:修复 maxCount 参数无效的 bug
 
