@@ -26,7 +26,7 @@ let j = 0;
 router.post('/uploadFile', async (ctx, next) => {
   const body = ctx.request.body
   console.log({ body })
-  await sleep(5);
+  await sleep(0.5);
 
   if (j % 2) {
     // ctx.status = 500;

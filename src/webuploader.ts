@@ -28,18 +28,27 @@ import axiosAdapter from './adapters/axiosAdapter';
  */
 function getFilteredFiles(
   files: File[],
+
   filterParams: {
     accept?: string;
     maxSize?: number;
     maxCount?: number;
     onVerified?: OnVerifiedFn;
     filter?: FilterFunction | undefined;
+    allFilesInfo: FileInfo[];
   }
 ): {
   validFiles: File[];
   inValidFiles: File[];
 } {
-  const { accept, maxSize, maxCount, filter, onVerified } = filterParams;
+  const {
+    accept,
+    maxSize,
+    maxCount,
+    filter,
+    onVerified,
+    allFilesInfo
+  } = filterParams;
   let validFiles: File[] = [...files];
   const inValidFiles: File[] = [];
 
@@ -76,8 +85,12 @@ function getFilteredFiles(
   }
 
   // maxCount 筛选
-  if (typeof maxCount === 'number' && maxCount < validFiles.length) {
-    const files = validFiles.splice(maxCount, validFiles.length - maxCount);
+  if (
+    typeof maxCount === 'number' &&
+    maxCount < validFiles.length + allFilesInfo.length
+  ) {
+    const files = validFiles;
+    validFiles = [];
     onVerified && onVerified({ type: 'MAX_COUNT', files });
     flag = true;
   }
@@ -278,7 +291,7 @@ export default class Webuploader extends Uploader {
       sort,
       onVerified,
       accept,
-      onFilesInfoQueued,
+      onFilesInfoQueued
     } = this.options;
     const files: Array<File> = Array.from((e.target as any).files);
 
@@ -288,7 +301,8 @@ export default class Webuploader extends Uploader {
       maxCount,
       maxSize,
       filter,
-      onVerified
+      onVerified,
+      allFilesInfo: this.allFiles
     });
 
     // sort
