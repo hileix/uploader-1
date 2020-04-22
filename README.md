@@ -61,6 +61,7 @@ export interface UploadOptions {
    * 接受的文件类型
    * 默认值：'*/*'
    * 值参照：https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#attr-accept
+   * 支持只传文件后缀作为接受的类型
    */
   accept?: string;
   /**

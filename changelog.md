@@ -1,3 +1,6 @@
+## Release v1.10.0
+- feat:添加 accept 只接受文件后缀类型的功能
+
 ## Release v1.9.8
 - fix:修复上传文件上传完一个后就不会继续上传的 bug
 
