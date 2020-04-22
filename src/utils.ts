@@ -59,7 +59,7 @@ export function validateOptions({ options }: any) {
           'chunkThreshold',
           'retryCount',
           'chunkRetryCount',
-          'threads'
+          'threads',
         ].includes(key)
       ) {
         if (!['number', 'undefined'].includes(typeof value)) {
@@ -95,7 +95,7 @@ export function validateOptions({ options }: any) {
           'onChunkComplete',
           'onComplete',
           'onProgress',
-          'requestAdapter'
+          'requestAdapter',
         ].includes(key)
       ) {
         if (!['function', 'undefined'].includes(typeof value)) {
@@ -119,7 +119,7 @@ export const log = {
   },
   success: (msg: string) => {
     console.log(`%c ${msg}`, `color: green;`);
-  }
+  },
 };
 
 /**
@@ -184,7 +184,7 @@ export function removeInfoFromFilesInfoById<T extends { id: string }>(
   infos: T[]
 ): T | undefined {
   // 通过 id 找到 index，然后通过 index 删除
-  const index = infos.findIndex(file => file.id === id);
+  const index = infos.findIndex((file) => file.id === id);
   if (index === -1) {
     return;
   }
@@ -214,7 +214,7 @@ export function Files2FilesInfo(
       retryCount,
       progress: 0,
       status: 'waiting',
-      loaded: 0
+      loaded: 0,
     });
   });
   return ret;
@@ -265,7 +265,7 @@ export function addChunksInfo(
           index: i,
           retryCount: chunkRetryCount,
           status: 'waiting',
-          loaded: 0
+          loaded: 0,
         });
       }
     }
@@ -278,16 +278,31 @@ export function addChunksInfo(
  */
 export const getFileType = (file: File) => {
   const arr = file.type.split('/');
+  let type, format;
+  if (arr.length === 1) {
+    format = arr[0];
+  } else {
+    type = arr[0];
+    format = arr[1];
+  }
+
   return {
-    type: arr[0],
-    format: arr[1]
+    type,
+    format,
   };
 };
 
 export const getTypeFromat = (singleAccept: string) => {
   const arr = singleAccept.split('/');
+  let type, format;
+  if (arr.length === 1) {
+    format = arr[0];
+  } else {
+    type = arr[0];
+    format = arr[1];
+  }
   return {
-    type: arr[0],
-    format: arr[1]
+    type,
+    format,
   };
 };

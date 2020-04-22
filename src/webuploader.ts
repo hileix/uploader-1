@@ -5,13 +5,13 @@ import {
   Files2FilesInfo,
   addChunksInfo,
   getFileType,
-  getTypeFromat
+  getTypeFromat,
 } from './utils';
 import {
   FileInfo,
   ExtendUploaderOptions,
   FilterFunction,
-  OnVerifiedFn
+  OnVerifiedFn,
 } from './interface';
 import axiosAdapter from './adapters/axiosAdapter';
 
@@ -47,7 +47,7 @@ function getFilteredFiles(
     maxCount,
     filter,
     onVerified,
-    allFilesInfo
+    allFilesInfo,
   } = filterParams;
   let validFiles: File[] = [...files];
   const inValidFiles: File[] = [];
@@ -58,15 +58,18 @@ function getFilteredFiles(
   if (accept) {
     const acceptArray = accept.split(',').filter(Boolean);
     const files: File[] = [];
-    validFiles = validFiles.filter(file => {
+    validFiles = validFiles.filter((file) => {
+      // type = 'image', format = 'png'
       const { type, format } = getFileType(file);
-      // ['image/*', 'image/png']
+      // ['image/*', 'image/png', 'jpg']
       let ret = false;
-      acceptArray.some(item => {
+      acceptArray.some((item) => {
         const typeFormat = getTypeFromat(item);
         if (
-          typeFormat.type === type &&
-          (typeFormat.format === format || typeFormat.format === '*')
+          (typeFormat.type === type &&
+            (typeFormat.format === format || typeFormat.format === '*')) ||
+          (typeFormat.type === undefined && typeFormat.format === format) ||
+          (typeFormat.format === '*')
         ) {
           ret = true;
         }
@@ -98,7 +101,7 @@ function getFilteredFiles(
   // maxSize 筛选
   if (typeof maxSize === 'number') {
     let files: File[] = [];
-    validFiles = validFiles.filter(file => {
+    validFiles = validFiles.filter((file) => {
       if (file.size <= maxSize) {
         return true;
       } else {
@@ -157,7 +160,7 @@ export default class Webuploader extends Uploader {
       multiple,
       md5,
       chunkMD5,
-      ...restOptions
+      ...restOptions,
     };
 
     validateOptions(this.options);
@@ -206,18 +209,18 @@ export default class Webuploader extends Uploader {
     const { multiple, accept } = this.options;
     // multiple
     if (!multiple) {
-      doms.forEach(item => {
+      doms.forEach((item) => {
         item.removeAttribute('multiple');
       });
     } else {
-      doms.forEach(item => {
+      doms.forEach((item) => {
         item.setAttribute('multiple', '');
       });
     }
 
     // accept
     if (accept) {
-      doms.forEach(item => {
+      doms.forEach((item) => {
         item.setAttribute('accept', accept);
       });
     }
@@ -229,7 +232,7 @@ export default class Webuploader extends Uploader {
    */
   private addEventListener(dom: HTMLInputElement | HTMLInputElement[]) {
     if (Array.isArray(dom)) {
-      dom.forEach(item => {
+      dom.forEach((item) => {
         item.addEventListener('change', this.handleInputChange);
       });
     } else {
@@ -238,13 +241,13 @@ export default class Webuploader extends Uploader {
   }
 
   public removeEventListener() {
-    this.inputDOMs.forEach(item => {
+    this.inputDOMs.forEach((item) => {
       item.removeEventListener('change', this.handleInputChange);
     });
   }
 
   removeInputDOMsValue = () => {
-    this.inputDOMs.forEach(inputDOM => {
+    this.inputDOMs.forEach((inputDOM) => {
       inputDOM.value = '';
     });
   };
@@ -291,7 +294,7 @@ export default class Webuploader extends Uploader {
       sort,
       onVerified,
       accept,
-      onFilesInfoQueued
+      onFilesInfoQueued,
     } = this.options;
     const files: Array<File> = Array.from((e.target as any).files);
 
@@ -302,7 +305,7 @@ export default class Webuploader extends Uploader {
       maxSize,
       filter,
       onVerified,
-      allFilesInfo: this.allFiles
+      allFilesInfo: this.allFiles,
     });
 
     // sort
@@ -335,7 +338,7 @@ export default class Webuploader extends Uploader {
 }
 
 Webuploader.configure({
-  requestAdapter: axiosAdapter
+  requestAdapter: axiosAdapter,
 });
 
 export interface WebuploaderOptions extends ExtendUploaderOptions {
