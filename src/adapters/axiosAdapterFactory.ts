@@ -81,7 +81,7 @@ const axiosAdapterFactory = (
         };
 
         onSuccessVerify
-          ? onSuccessVerify(info, res, successVerifyCallback)
+          ? onSuccessVerify(info, res.data, successVerifyCallback)
           : successVerifyCallback();
       })
       .catch(err => {
