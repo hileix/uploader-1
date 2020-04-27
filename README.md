@@ -395,6 +395,10 @@ export default Webuploader;
 ```
 - 以上配置了一次之后，在别处引用都生效
 
+## ⚠️ 注意
+
+如果你的项目中也使用了 axios，可能会存在项目中 axios 的全局配置会影响 axiosAdapter 的配置，导致出现 bug
+
 ## Todolist
 
 - [ ] 部署 storybook 到 github page，且能够正常查看例子

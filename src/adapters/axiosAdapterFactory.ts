@@ -76,7 +76,7 @@ const axiosAdapterFactory = (
             throw new Error(errorMessage);
           }
           // 上传成功
-          onSuccess(info, res);
+          onSuccess(info, res.data);
           onAfter(info);
         };
 
