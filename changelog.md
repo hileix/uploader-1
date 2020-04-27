@@ -1,3 +1,6 @@
+## Release v2.0.1
+- fix: 修复 onSuccessVerify 回调调用时第二个参数传入错误的 bug
+
 ## Release v2.0.0
 - breakchange: axiosAdapter 中传给 onSuccess 回调的第二个参数由 res 改为 res.data
 

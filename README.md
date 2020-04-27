@@ -1,5 +1,7 @@
 # Web 端文件上传
 
+[@hife/uploader](https://www.npmjs.com/package/@hife/uploader) 严格遵守 [语义化版本](https://semver.org/lang/zh-CN/) 规范
+
 ## Install
 ```shell
 yarn add @hife/uploader
