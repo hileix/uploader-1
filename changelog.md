@@ -1,3 +1,6 @@
+## Release v2.0.0
+- breakchange: axiosAdapter 中传给 onSuccess 回调的第二个参数由 res 改为 res.data
+
 ## Release v1.10.0
 - feat:添加 accept 只接受文件后缀类型的功能
 
